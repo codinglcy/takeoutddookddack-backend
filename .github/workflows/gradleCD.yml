@@ -1,0 +1,73 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
+
+name: Gradle CD
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: takeoutddookddack-backend
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+
+    - name: ./gradlew 권한 설정
+      run: chmod +x ./gradlew
+      
+    - name: build
+      run: ./gradlew clean build
+    
+    - name: Get current time
+      uses: 1466587594/get-current-time@v2
+      id: current-time
+      with:
+        format: YYYY-MM-DDTHH-mm-ss
+        utcOffset: '+09:00'
+    
+    - name: make zip file
+      run: zip -qq -r ${{steps.current-time.outputs.formattedTime}}-backend.zip .
+      shell: bash
+    
+    - name: aws 계정 설정
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+    
+    - name: S3 업로드
+      run: aws s3 cp --region ap-northeast-2 ${{steps.current-time.outputs.formattedTime}}-backend.zip s3://ddookddack-back/${{steps.current-time.outputs.formattedTime}}-backend.zip
+    
+    - name: Deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        aws deploy create-deployment \
+        ==application-name ddookddack \
+        --deployment-group-name ddookddackApp \
+        --file-exists-behavior OVERWRITE \
+        --s3-location bucket=ddookddack-back,bundleType=zip,key=${{steps.current-time.outputs.formattedTime}}-backend.zip \
+        --region ap-northeast-2
+        
+        
+        
+        
+        
