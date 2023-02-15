@@ -20,14 +20,11 @@ jobs:
     - uses: actions/checkout@v3
     - run: touch ./src/main/resources/application.properties
     
-    - name: Set up JDK 11
+    - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'
         distribution: 'temurin'
-
-    - name: Validate Gradle wrapper
-      uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
     
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
