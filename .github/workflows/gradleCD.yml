@@ -31,7 +31,7 @@ jobs:
       run: chmod +x ./gradlew
       
     - name: build
-      run: ./gradlew clean build
+      run: gradlew clean build
     
     - name: Get current time
       uses: 1466587594/get-current-time@v2
