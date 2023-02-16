@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+PROJECT_ROOT="/home/ubuntu/server"
+JAR_FILE="$PROJECT_ROOT/ddookddack-back.jar"
+
+DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
+
+TIME_NOW=$(date +%c)
+
+CURRENT_PIT=$(pgrep -f $JAR_FILE)
+
+if [ -z $CURRENT_PID ]; then
+  echo "$TIME_NOW > 현재 실행중인 어플이 없습니다." >> $DEPLOY_LOG
+else
+  echo "$TIME_NOW > 실행중인 $CURRENT_PID 어플 종료" >> $DEPLOY_LOG
+  kill -15 $CURRENT_PID
+fi

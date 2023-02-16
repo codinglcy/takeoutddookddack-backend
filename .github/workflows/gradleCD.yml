@@ -32,19 +32,8 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
-        arguments: build
-    
-    - name: Get current time
-      uses: 1466587594/get-current-time@v2
-      id: current-time
-      with:
-        format: YYYY-MM-DDTHH-mm-ss
-        utcOffset: '+09:00'
-    
-    - name: make zip file
-      run: zip -qq -r ${{steps.current-time.outputs.formattedTime}}-backend.zip .
-      shell: bash
-    
+        arguments: clean build -x test
+
     - name: aws 계정 설정
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -53,7 +42,12 @@ jobs:
         aws-region: ap-northeast-2
     
     - name: S3 업로드
-      run: aws s3 cp --region ap-northeast-2 ${{steps.current-time.outputs.formattedTime}}-backend.zip s3://ddookddack-back/${{steps.current-time.outputs.formattedTime}}-backend.zip
+      run: |
+        aws deploy push \
+        --application-name ddookddack \
+        --ignore-hidden-files \
+        --s3-location s3://ddookddack-back/$GITHUB_SHA.zip \
+        --source .
     
     - name: Deploy
       env:
@@ -61,10 +55,10 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         aws deploy create-deployment \
-        ==application-name ddookddack \
+        --application-name ddookddack \
         --deployment-group-name ddookddackApp \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=ddookddack-back,bundleType=zip,key=${{steps.current-time.outputs.formattedTime}}-backend.zip \
+        --s3-location bucket=ddookddack-back,bundleType=zip,key=$GITHUB_SHA.zip \
         --region ap-northeast-2
         
         
