@@ -25,10 +25,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - uses: actions/checkout@v3
+
     - name: application.properties 생성
-      run: |
-        touch ./src/main/resources/application.properties
-        echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
+      run: touch ./src/main/resources/application.properties
+
+    - name: application.properties 내용 삽입
+      run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
     
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
