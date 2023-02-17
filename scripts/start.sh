@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PROJECT_ROOT="/home/ubuntu/server"
+PROJECT_ROOT="/home/ubuntu/ddookddackapp"
 JAR_FILE="$PROJECT_ROOT/ddookddack-back.jar"
 
 APP_LOG="$PROJECT_ROOT/application.log"

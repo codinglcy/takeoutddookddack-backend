@@ -3,10 +3,10 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ubuntu/server
+    destination: /home/ubuntu/ddookddackapp
     overwrite: yes
 permissions:
-  - object: /home/ubuntu/server
+  - object: /home/ubuntu/ddookddackapp
     owner: ubuntu
     group: ubuntu
     mode: 755
