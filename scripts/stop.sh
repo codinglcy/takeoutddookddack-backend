@@ -7,7 +7,7 @@ DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 
 TIME_NOW=$(date +%c)
 
-CURRENT_PIT=$(pgrep -f $JAR_FILE)
+CURRENT_PID=$(pgrep -f $JAR_FILE)
 
 if [ -z $CURRENT_PID ]; then
   echo "$TIME_NOW > 현재 실행중인 어플이 없습니다." >> $DEPLOY_LOG
