@@ -29,6 +29,7 @@ jobs:
 
     - name: application.properties
       run: |
+        touch /src/main/resources/application.properties
         echo "${{ secrets.APPLICATION }}" > /src/main/resources/application.properties
         cat /src/main/resources/application.properties
     
