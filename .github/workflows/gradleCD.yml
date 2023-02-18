@@ -27,7 +27,7 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    - name: application.properties
+    - name: application.yml
       run: |
         touch ./src/main/resources/application.yml
         echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
