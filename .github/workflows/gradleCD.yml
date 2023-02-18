@@ -29,9 +29,9 @@ jobs:
 
     - name: application.properties
       run: |
-        touch ./src/main/resources/application.properties
-        echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
-        cat ./src/main/resources/application.properties
+        touch ./src/main/resources/application.yml
+        echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
+        cat ./src/main/resources/application.yml
     
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
