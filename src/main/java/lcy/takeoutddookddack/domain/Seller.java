@@ -16,7 +16,7 @@ public class Seller {
     private String tel;
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="shopurl")
     private Shop shop;
 
