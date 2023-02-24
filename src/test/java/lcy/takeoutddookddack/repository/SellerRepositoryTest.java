@@ -27,7 +27,7 @@ public class SellerRepositoryTest {
         Seller seller1 = Seller.builder().sellerId("seller1").pwd("1234").tel("010-5555-5555").name("김판매자").build();
 
         Seller newSeller = sellerRepository.saveNew(seller1);
-        System.out.println("newSeller = " + newSeller.get_id() + " " + newSeller.getSellerId() + " "  + newSeller.getPwd() + " "  + newSeller.getName() + " "  + newSeller.getTel() + " " + newSeller.getShopPage());
+        System.out.println("newSeller = " + newSeller.getId() + " " + newSeller.getSellerId() + " "  + newSeller.getPwd() + " "  + newSeller.getName() + " "  + newSeller.getTel() + " " + newSeller.getShopPage());
     }
 
     @Test
@@ -35,7 +35,7 @@ public class SellerRepositoryTest {
         Seller seller1editName = Seller.builder().sellerId("seller1").pwd("1234").tel("010-5555-5555").name("이판매자").build();
 
         Seller updateSeller = sellerRepository.update("seller1", seller1editName);
-        System.out.println("updateSeller = " + updateSeller.get_id() + " " + updateSeller.getSellerId() + " "  + updateSeller.getPwd() + " "  + updateSeller.getName() + " "  + updateSeller.getTel() + " " + updateSeller.getShopPage());
+        System.out.println("updateSeller = " + updateSeller.getId() + " " + updateSeller.getSellerId() + " "  + updateSeller.getPwd() + " "  + updateSeller.getName() + " "  + updateSeller.getTel() + " " + updateSeller.getShopPage());
     }
 
 }
