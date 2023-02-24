@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 public class Seller {
     @Id
-    private ObjectId _id;
+    private ObjectId id;
     private String sellerId;
     private String pwd;
     private String tel;

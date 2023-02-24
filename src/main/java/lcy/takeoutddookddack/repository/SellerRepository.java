@@ -54,7 +54,7 @@ public class SellerRepository extends AbstractRepository<Seller>{
 
     @Override
     public void deleteById(Id id) {
-        template.remove(new Query(Criteria.where("_id").is(id)), Seller.class);
+        template.remove(new Query(Criteria.where("id").is(id)), Seller.class);
     }
 
     @Override

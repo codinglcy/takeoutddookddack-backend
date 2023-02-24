@@ -3,6 +3,7 @@ package lcy.takeoutddookddack.domain;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
+import org.bson.types.ObjectId;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Getter
 public class Shop {
     @Id
+    private ObjectId id;
     private String shopUrl;
 
     private List<Menu> menu;
