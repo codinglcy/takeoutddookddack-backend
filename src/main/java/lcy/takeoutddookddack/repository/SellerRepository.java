@@ -1,8 +1,7 @@
 package lcy.takeoutddookddack.repository;
 
-import com.mongodb.client.result.UpdateResult;
-import jakarta.persistence.Id;
 import lcy.takeoutddookddack.domain.Seller;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -20,7 +19,7 @@ public class SellerRepository extends AbstractRepository<Seller>{
     }
 
     @Override
-    public Seller findById(Id id) {
+    public Seller findById(ObjectId id) {
         Seller findSeller = template.findById(id, Seller.class);
         return findSeller;
     }
@@ -53,7 +52,7 @@ public class SellerRepository extends AbstractRepository<Seller>{
     }
 
     @Override
-    public void deleteById(Id id) {
+    public void deleteById(ObjectId id) {
         template.remove(new Query(Criteria.where("id").is(id)), Seller.class);
     }
 

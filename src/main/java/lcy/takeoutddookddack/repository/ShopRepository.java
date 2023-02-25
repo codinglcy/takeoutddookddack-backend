@@ -1,7 +1,9 @@
 package lcy.takeoutddookddack.repository;
 
-import jakarta.persistence.Id;
+import com.mongodb.BasicDBObject;
+import lcy.takeoutddookddack.domain.Menu;
 import lcy.takeoutddookddack.domain.Shop;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -18,7 +20,7 @@ public class ShopRepository extends AbstractRepository<Shop> {
     }
 
     @Override
-    public Shop findById(Id id) {
+    public Shop findById(ObjectId id) {
         Shop findShop = template.findById(id, Shop.class);
         return findShop;
     }
@@ -36,7 +38,6 @@ public class ShopRepository extends AbstractRepository<Shop> {
 
         query.addCriteria(Criteria.where("shopUrl").is(shopUrl));
         update.set("shopUrl", shop.getShopUrl());
-//        update.set("menu", shop.getMenu());
         update.set("bankAccount", shop.getBankAccount());
         update.set("location", shop.getLocation());
 
@@ -44,8 +45,42 @@ public class ShopRepository extends AbstractRepository<Shop> {
         return updateShop;
     }
 
+    public Shop updateUrl(String shopUrl, String sellerId) {
+        Query query = new Query();
+        Update update = new Update();
+        String newShopUrl = "http://localhost:3000/buypage/"+sellerId;
+
+        query.addCriteria(Criteria.where("shopUrl").is(shopUrl));
+        update.set("shopUrl", newShopUrl);
+
+        Shop updateShop = template.findAndModify(query, update, Shop.class);
+        return updateShop;
+    }
+
+    public Shop addMenu(String shopUrl, Menu menu) {
+        Query query = new Query();
+        Update update = new Update();
+
+        query.addCriteria(Criteria.where("shopUrl").is(shopUrl));
+        update.push("menu").each(menu);
+
+        Shop updateShop = template.findAndModify(query, update, Shop.class);
+        return updateShop;
+    }
+
+    public Shop deleteMenu(String shopUrl, String menuItem) {
+        Query query = new Query();
+        Update update = new Update();
+
+        query.addCriteria(Criteria.where("shopUrl").is(shopUrl));
+        update.pull("menu", new BasicDBObject("item", menuItem));
+
+        Shop updateShop = template.findAndModify(query, update, Shop.class);
+        return updateShop;
+    }
+
     @Override
-    public void deleteById(Id id) {
+    public void deleteById(ObjectId id) {
         template.remove(new Query(Criteria.where("id").is(id)), Shop.class);
     }
 
