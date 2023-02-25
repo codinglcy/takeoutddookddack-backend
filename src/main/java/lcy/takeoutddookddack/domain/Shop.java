@@ -20,15 +20,13 @@ public class Shop {
     private String location;
     private String bankAccount;
     private Boolean open;
-    private List<Orders> orders;
 
     @Builder
-    public Shop(String shopUrl, List<Menu> menu, String location, String bankAccount, Boolean open, List<Orders> orders){
+    public Shop(String shopUrl, List<Menu> menu, String location, String bankAccount, Boolean open){
         this.shopUrl = shopUrl;
         this.menu = menu;
         this.location = location;
         this.bankAccount = bankAccount;
         this.open = open;
-        this.orders = orders;
     }
 }
