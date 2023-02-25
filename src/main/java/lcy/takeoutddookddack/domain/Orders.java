@@ -21,7 +21,7 @@ public class Orders {
     private List<OrderMenu> selectMenu;
     private OrderStatus status;
     private int totalPrice;
-//    private String shopUrl;
+    private String shopUrl;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -30,13 +30,13 @@ public class Orders {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Orders(String orderTel, String orderName, List<OrderMenu> selectMenu, OrderStatus status, int totalPrice){
+    public Orders(String orderTel, String orderName, List<OrderMenu> selectMenu, OrderStatus status, int totalPrice, String shopUrl){
         this.orderTel = orderTel;
         this.orderName = orderName;
         this.selectMenu = selectMenu;
         this.status = status;
         this.totalPrice = totalPrice;
-//        this.shopUrl = shopUrl;
+        this.shopUrl = shopUrl;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
