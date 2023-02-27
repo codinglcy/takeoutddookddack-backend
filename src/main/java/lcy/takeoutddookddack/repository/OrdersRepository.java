@@ -1,8 +1,8 @@
 package lcy.takeoutddookddack.repository;
 
+import com.mongodb.client.result.DeleteResult;
 import lcy.takeoutddookddack.domain.OrderStatus;
 import lcy.takeoutddookddack.domain.Orders;
-import org.aspectj.weaver.ast.Or;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -40,7 +40,7 @@ public class OrdersRepository extends AbstractRepository<Orders> {
         Query query = new Query();
         Update update = new Update();
 
-        query.addCriteria(Criteria.where("id").is(id));
+        query.addCriteria(Criteria.where("_id").is(id));
         update.set("status", status);
         update.set("updatedAt", LocalDateTime.now());
 
@@ -49,8 +49,8 @@ public class OrdersRepository extends AbstractRepository<Orders> {
     }
 
     @Override
-    public void deleteById(ObjectId id) {
-        template.remove(new Query(Criteria.where("id").is(id)), Orders.class);
+    public DeleteResult deleteById(ObjectId id) {
+        return template.remove(new Query(Criteria.where("_id").is(id)), Orders.class);
     }
 
 
@@ -65,7 +65,7 @@ public class OrdersRepository extends AbstractRepository<Orders> {
     }
 
     @Override //사용하지 않음
-    public Orders update(String E, Orders orders) {
+    public Orders update(ObjectId id, Orders orders) {
         return null;
     }
 }

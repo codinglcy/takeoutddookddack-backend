@@ -1,19 +1,24 @@
 package lcy.takeoutddookddack.domain;
 
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.List;
 
 @Document
 @Getter
+@NoArgsConstructor
 public class Shop {
     @Id
-    private ObjectId id;
+    @Field(name = "_id", targetType = FieldType.OBJECT_ID)
+    private String id;
     private String shopUrl;
 
     private List<Menu> menu;

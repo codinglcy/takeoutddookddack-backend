@@ -1,21 +1,27 @@
 package lcy.takeoutddookddack.domain;
 
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Document
 @Getter
+@NoArgsConstructor
 public class Orders {
     @Id
-    private ObjectId id;
+    @Field(name = "_id", targetType = FieldType.OBJECT_ID)
+    private String id;
     private String orderTel;
     private String orderName;
     private List<OrderMenu> selectMenu;

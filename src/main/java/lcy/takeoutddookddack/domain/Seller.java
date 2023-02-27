@@ -1,21 +1,27 @@
 package lcy.takeoutddookddack.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 
 @Document
 @Getter
+@NoArgsConstructor
 public class Seller {
+
     @Id
-    private ObjectId id;
+    @Field(name = "_id", targetType = FieldType.OBJECT_ID)
+    private String id;
     @Indexed(unique = true)
     private String sellerId;
     private String pwd;
@@ -24,11 +30,11 @@ public class Seller {
     private String shopPage;
 
     @Builder
-    public Seller(String sellerId, String pwd, String tel, String name){
+    public Seller(String sellerId, String pwd, String tel, String name, String shopPage){
         this.sellerId = sellerId;
         this.pwd = pwd;
         this.tel = tel;
         this.name = name;
-        this.shopPage = "http://localhose:3000/buypage/"+sellerId;
+        this.shopPage = shopPage;
     }
 }

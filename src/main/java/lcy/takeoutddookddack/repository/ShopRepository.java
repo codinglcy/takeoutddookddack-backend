@@ -1,9 +1,11 @@
 package lcy.takeoutddookddack.repository;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.result.DeleteResult;
 import lcy.takeoutddookddack.domain.Menu;
 import lcy.takeoutddookddack.domain.Shop;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -13,6 +15,10 @@ import java.util.List;
 
 @Repository
 public class ShopRepository extends AbstractRepository<Shop> {
+
+    @Value("${config.url}")
+    private String siteUrl;
+
     @Override
     public Shop saveNew(Shop shop) {
         Shop newShop = template.save(shop);
@@ -32,11 +38,11 @@ public class ShopRepository extends AbstractRepository<Shop> {
     }
 
     @Override
-    public Shop update(String shopUrl, Shop shop) {
+    public Shop update(ObjectId id, Shop shop) {
         Query query = new Query();
         Update update = new Update();
 
-        query.addCriteria(Criteria.where("shopUrl").is(shopUrl));
+        query.addCriteria(Criteria.where("_id").is(id));
         update.set("shopUrl", shop.getShopUrl());
         update.set("bankAccount", shop.getBankAccount());
         update.set("location", shop.getLocation());
@@ -45,34 +51,34 @@ public class ShopRepository extends AbstractRepository<Shop> {
         return updateShop;
     }
 
-    public Shop updateUrl(String shopUrl, String sellerId) {
+    public Shop updateUrl(ObjectId id, String sellerId) {
         Query query = new Query();
         Update update = new Update();
-        String newShopUrl = "http://localhost:3000/buypage/"+sellerId;
+        String newShopUrl = siteUrl+"buypage/"+sellerId;
 
-        query.addCriteria(Criteria.where("shopUrl").is(shopUrl));
+        query.addCriteria(Criteria.where("_id").is(id));
         update.set("shopUrl", newShopUrl);
 
         Shop updateShop = template.findAndModify(query, update, Shop.class);
         return updateShop;
     }
 
-    public Shop addMenu(String shopUrl, Menu menu) {
+    public Shop addMenu(ObjectId id, Menu menu) {
         Query query = new Query();
         Update update = new Update();
 
-        query.addCriteria(Criteria.where("shopUrl").is(shopUrl));
+        query.addCriteria(Criteria.where("_id").is(id));
         update.push("menu").each(menu);
 
         Shop updateShop = template.findAndModify(query, update, Shop.class);
         return updateShop;
     }
 
-    public Shop deleteMenu(String shopUrl, String menuItem) {
+    public Shop deleteMenu(ObjectId id, String menuItem) {
         Query query = new Query();
         Update update = new Update();
 
-        query.addCriteria(Criteria.where("shopUrl").is(shopUrl));
+        query.addCriteria(Criteria.where("_id").is(id));
         update.pull("menu", new BasicDBObject("item", menuItem));
 
         Shop updateShop = template.findAndModify(query, update, Shop.class);
@@ -80,8 +86,8 @@ public class ShopRepository extends AbstractRepository<Shop> {
     }
 
     @Override
-    public void deleteById(ObjectId id) {
-        template.remove(new Query(Criteria.where("id").is(id)), Shop.class);
+    public DeleteResult deleteById(ObjectId id) {
+        return template.remove(new Query(Criteria.where("_id").is(id)), Shop.class);
     }
 
     @Override

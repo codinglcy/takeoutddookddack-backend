@@ -1,6 +1,6 @@
 package lcy.takeoutddookddack.repository;
 
-import jakarta.persistence.Id;
+import com.mongodb.client.result.DeleteResult;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -17,9 +17,9 @@ abstract class AbstractRepository<T> {
 
     public abstract List<T> findAll();
 
-    public abstract T update(String E, T t);
+    public abstract T update(ObjectId id, T t);
 
-    public abstract void deleteById(ObjectId id);
+    public abstract DeleteResult deleteById(ObjectId id);
 
     public abstract void deleteAll();
 }

@@ -1,5 +1,6 @@
 package lcy.takeoutddookddack.repository;
 
+import com.mongodb.client.result.DeleteResult;
 import lcy.takeoutddookddack.domain.Seller;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -36,24 +37,26 @@ public class SellerRepository extends AbstractRepository<Seller>{
     }
 
     @Override
-    public Seller update(String sellerId, Seller seller) {
+    public Seller update(ObjectId id, Seller seller) {
         Query query = new Query();
         Update update = new Update();
 
-        query.addCriteria(Criteria.where("sellerId").is(sellerId));
+        query.addCriteria(Criteria.where("_id").is(id));
         update.set("sellerId", seller.getSellerId());
         update.set("pwd", seller.getPwd());
         update.set("tel", seller.getTel());
         update.set("name", seller.getName());
         update.set("shopPage", seller.getShopPage());
 
-        Seller updateSeller = template.findAndModify(query, update, Seller.class);
+        template.updateFirst(query, update, Seller.class);
+
+        Seller updateSeller = template.findById(id, Seller.class);
         return updateSeller;
     }
 
     @Override
-    public void deleteById(ObjectId id) {
-        template.remove(new Query(Criteria.where("id").is(id)), Seller.class);
+    public DeleteResult deleteById(ObjectId id) {
+        return template.remove(new Query(Criteria.where("_id").is(id)), Seller.class);
     }
 
     @Override
