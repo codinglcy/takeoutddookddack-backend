@@ -3,6 +3,7 @@ package lcy.takeoutddookddack.repository;
 import lcy.takeoutddookddack.domain.Menu;
 import lcy.takeoutddookddack.domain.Seller;
 import lcy.takeoutddookddack.domain.Shop;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,22 +37,21 @@ public class ShopRepositoryTest {
 
     @Test
     public void edit(){
-        String shopOwnerSellerId = "seller1";
+        ObjectId id = new ObjectId();
         Shop shop1EditLocation = Shop.builder().bankAccount("00은행 1111111111111 이판매자").location("ㅇㅇ고등학교정문 맞은편").build();
 
-        Shop updateShop = shopRepository.update("http://localhost:3000/buypage/"+shopOwnerSellerId, shop1EditLocation);
+        Shop updateShop = shopRepository.update(id, shop1EditLocation);
         System.out.println("updateShop = " + updateShop);
         System.out.println("newSeller = " + updateShop.getId() + " " + updateShop.getShopUrl() + " "  + updateShop.getMenu() + " "  + updateShop.getLocation() + " "  + updateShop.getBankAccount() + " " + updateShop.getOpen());
     }
 
     @Test
     public void addMenu(){
-        String shopOwnerSellerId = "seller1";
-        String shopUrl = "http://localhost:3000/buypage/"+shopOwnerSellerId;
+        ObjectId id = new ObjectId();
 //        Menu menu = Menu.builder().item("붕어빵 2개").price(1000).build();
         Menu menu = Menu.builder().item("계란빵 3개").price(2000).build();
 
-        Shop newShop = shopRepository.addMenu(shopUrl, menu);
+        Shop newShop = shopRepository.addMenu(id, menu);
         System.out.println("newSeller = " + newShop.getId() + " " + newShop.getShopUrl() + " "  + newShop.getMenu() + " "  + newShop.getLocation() + " "  + newShop.getBankAccount() + " " + newShop.getOpen());
     }
 
