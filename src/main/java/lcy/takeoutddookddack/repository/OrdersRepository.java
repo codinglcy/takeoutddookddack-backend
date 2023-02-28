@@ -26,8 +26,8 @@ public class OrdersRepository extends AbstractRepository<Orders> {
         return ordersList;
     }
 
-    public List<Orders> findByUrl(String shopUrl) {
-        List<Orders> shopOrdersList = template.find(new Query(Criteria.where("shopUrl").is(shopUrl)),Orders.class);
+    public List<Orders> findBySeller(String sellerId) {
+        List<Orders> shopOrdersList = template.find(new Query(Criteria.where("sellerId").is(sellerId)),Orders.class);
         return shopOrdersList;
     }
 
