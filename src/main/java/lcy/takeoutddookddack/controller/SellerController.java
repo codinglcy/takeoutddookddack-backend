@@ -8,6 +8,7 @@ import lcy.takeoutddookddack.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class SellerController {
     private String siteUrl;
 
     private final SellerService sellerService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/idCheck")
     public CheckResult idCheck(@RequestBody Map<String,String> body){
@@ -33,9 +35,9 @@ public class SellerController {
     public Seller createSeller(@RequestBody @Valid Seller sellerInfo){
         Seller newSeller = Seller.builder()
                 .sellerId(sellerInfo.getSellerId())
-                .pwd(sellerInfo.getPwd())
+                .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
                 .name(sellerInfo.getName())
-                .tel(sellerInfo.getTel())
+                .email(sellerInfo.getEmail())
                 .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
                 .build();
         Seller createdSeller = sellerService.create(newSeller);
@@ -52,9 +54,9 @@ public class SellerController {
     public Seller editSeller(@PathVariable("id") ObjectId id, @RequestBody @Valid Seller sellerInfo){
         Seller updateSeller = Seller.builder()
                 .sellerId(sellerInfo.getSellerId())
-                .pwd(sellerInfo.getPwd())
+                .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
                 .name(sellerInfo.getName())
-                .tel(sellerInfo.getTel())
+                .email(sellerInfo.getEmail())
                 .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
                 .build();
         Seller updatedSeller = sellerService.editSeller(id, updateSeller);

@@ -25,15 +25,15 @@ public class Seller {
     @Indexed(unique = true)
     private String sellerId;
     private String pwd;
-    private String tel;
+    private String email;
     private String name;
     private String shopPage;
 
     @Builder
-    public Seller(String sellerId, String pwd, String tel, String name, String shopPage){
+    public Seller(String sellerId, String pwd, String email, String name, String shopPage){
         this.sellerId = sellerId;
         this.pwd = pwd;
-        this.tel = tel;
+        this.email = email;
         this.name = name;
         this.shopPage = shopPage;
     }
