@@ -6,19 +6,13 @@ import org.bson.types.ObjectId;
 
 @Getter
 public class LoginResponse {
-    private ObjectId id;
-    private String sellerId;
-    private String email;
-    private String name;
+    private String id;
     private String accessToken;
     private String refreshToken;
 
     @Builder
-    public LoginResponse(ObjectId id, String sellerId, String email, String name, String accessToken, String refreshToken){
+    public LoginResponse(String id, String accessToken, String refreshToken){
         this.id = id;
-        this.sellerId = sellerId;
-        this.email = email;
-        this.name = name;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }

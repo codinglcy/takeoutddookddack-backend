@@ -3,9 +3,11 @@ package lcy.takeoutddookddack.controller;
 import com.mongodb.client.result.DeleteResult;
 import jakarta.validation.Valid;
 import lcy.takeoutddookddack.domain.CheckResult;
+import lcy.takeoutddookddack.domain.LoginResponse;
 import lcy.takeoutddookddack.domain.Seller;
 import lcy.takeoutddookddack.service.SellerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +19,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/seller")
+@Slf4j
 public class SellerController {
     @Value("${config.url}")
     private String siteUrl;
@@ -51,7 +54,7 @@ public class SellerController {
     }
 
     @PatchMapping("/{id}")
-    public Seller editSeller(@PathVariable("id") ObjectId id, @RequestBody @Valid Seller sellerInfo){
+    public Seller editSeller(@PathVariable("id") String id, @RequestBody @Valid Seller sellerInfo){
         Seller updateSeller = Seller.builder()
                 .sellerId(sellerInfo.getSellerId())
                 .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
@@ -63,8 +66,18 @@ public class SellerController {
         return updatedSeller;
     }
 
+    @GetMapping("/login")
+    public LoginResponse login(@RequestBody Map<String, String> loginInfo){
+        String loginSellerId = loginInfo.get("sellerId");
+        String loginPassword = loginInfo.get("pwd");
+
+        LoginResponse loginResponse = sellerService.login(loginSellerId, loginPassword);
+
+        return loginResponse;
+    }
+
     @DeleteMapping("/{id}")
-    public DeleteResult removeById(@PathVariable("id") ObjectId id){
+    public DeleteResult removeById(@PathVariable("id") String id){
         return sellerService.removeById(id);
     }
 }
