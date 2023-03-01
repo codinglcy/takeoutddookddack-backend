@@ -26,7 +26,7 @@ public class ShopRepository extends AbstractRepository<Shop> {
     }
 
     @Override
-    public Shop findById(ObjectId id) {
+    public Shop findById(String id) {
         Shop findShop = template.findById(id, Shop.class);
         return findShop;
     }
@@ -38,7 +38,7 @@ public class ShopRepository extends AbstractRepository<Shop> {
     }
 
     @Override
-    public Shop update(ObjectId id, Shop shop) {
+    public Shop update(String id, Shop shop) {
         Query query = new Query();
         Update update = new Update();
 
@@ -86,7 +86,7 @@ public class ShopRepository extends AbstractRepository<Shop> {
     }
 
     @Override
-    public DeleteResult deleteById(ObjectId id) {
+    public DeleteResult deleteById(String id) {
         return template.remove(new Query(Criteria.where("_id").is(id)), Shop.class);
     }
 

@@ -13,13 +13,13 @@ abstract class AbstractRepository<T> {
 
     public abstract T saveNew(T t);
 
-    public abstract T findById(ObjectId id);
+    public abstract T findById(String id);
 
     public abstract List<T> findAll();
 
-    public abstract T update(ObjectId id, T t);
+    public abstract T update(String id, T t);
 
-    public abstract DeleteResult deleteById(ObjectId id);
+    public abstract DeleteResult deleteById(String id);
 
     public abstract void deleteAll();
 }

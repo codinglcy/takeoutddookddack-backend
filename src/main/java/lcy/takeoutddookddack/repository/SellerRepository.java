@@ -20,7 +20,7 @@ public class SellerRepository extends AbstractRepository<Seller>{
     }
 
     @Override
-    public Seller findById(ObjectId id) {
+    public Seller findById(String id) {
         Seller findSeller = template.findById(id, Seller.class);
         return findSeller;
     }
@@ -37,7 +37,7 @@ public class SellerRepository extends AbstractRepository<Seller>{
     }
 
     @Override
-    public Seller update(ObjectId id, Seller seller) {
+    public Seller update(String id, Seller seller) {
         Query query = new Query();
         Update update = new Update();
 
@@ -55,7 +55,7 @@ public class SellerRepository extends AbstractRepository<Seller>{
     }
 
     @Override
-    public DeleteResult deleteById(ObjectId id) {
+    public DeleteResult deleteById(String id) {
         return template.remove(new Query(Criteria.where("_id").is(id)), Seller.class);
     }
 

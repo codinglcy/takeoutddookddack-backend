@@ -36,7 +36,7 @@ public class OrdersRepository extends AbstractRepository<Orders> {
         return statusOrdersList;
     }
 
-    public Orders updateStatus(ObjectId id, OrderStatus status) {
+    public Orders updateStatus(String id, OrderStatus status) {
         Query query = new Query();
         Update update = new Update();
 
@@ -49,7 +49,7 @@ public class OrdersRepository extends AbstractRepository<Orders> {
     }
 
     @Override
-    public DeleteResult deleteById(ObjectId id) {
+    public DeleteResult deleteById(String id) {
         return template.remove(new Query(Criteria.where("_id").is(id)), Orders.class);
     }
 
@@ -60,12 +60,12 @@ public class OrdersRepository extends AbstractRepository<Orders> {
     }
 
     @Override //사용하지 않음
-    public Orders findById(ObjectId id) {
+    public Orders findById(String id) {
         return null;
     }
 
     @Override //사용하지 않음
-    public Orders update(ObjectId id, Orders orders) {
+    public Orders update(String id, Orders orders) {
         return null;
     }
 }

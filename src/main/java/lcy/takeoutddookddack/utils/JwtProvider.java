@@ -18,6 +18,7 @@ import java.security.Key;
 import java.util.Date;
 
 @RequiredArgsConstructor
+@Component
 public class JwtProvider {
     @Value("${jwt.secret.key}")
     private String salt;
@@ -29,15 +30,15 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(salt.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createAccessToken(ObjectId id, String sellerId){
+    public String createAccessToken(String id, String sellerId){
         return createToken(id, sellerId, accessExp);
     }
 
-    public String createRefreshToken(ObjectId id, String sellerId){
+    public String createRefreshToken(String id, String sellerId){
         return createToken(id, sellerId, refreshExp);
     }
 
-    private String createToken(ObjectId id, String sellerId, Long exp){
+    private String createToken(String id, String sellerId, Long exp){
         Claims claims = Jwts.claims();
         claims.put("sellerId", sellerId);
         claims.put("id", id);
@@ -50,7 +51,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String validateToken(String token){
+    public Claims validateToken(String token){
         try{
             if (!token.substring(0,"BEARER ".length()).equalsIgnoreCase("BEARER ")){
                 throw new InvalidParameterException("유효하지 않은 토큰입니다.");
@@ -61,8 +62,7 @@ public class JwtProvider {
                     .setSigningKey(getSecretKey(salt))
                     .build()
                     .parseClaimsJws(token)
-                    .getBody()
-                    .get("id", String.class);
+                    .getBody();
         }catch (Exception e){
             throw new InvalidParameterException("유효하지 않은 토큰입니다.");
         }
