@@ -7,6 +7,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import lcy.takeoutddookddack.error.CustomException;
+import lcy.takeoutddookddack.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +56,7 @@ public class JwtProvider {
     public Claims validateToken(String token){
         try{
             if (!token.substring(0,"BEARER ".length()).equalsIgnoreCase("BEARER ")){
-                throw new InvalidParameterException("유효하지 않은 토큰입니다.");
+                throw new CustomException(ErrorCode.INVALID_TOKEN);
             }else {
                 token = token.split(" ")[1].trim();
             }
@@ -64,7 +66,7 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
         }catch (Exception e){
-            throw new InvalidParameterException("유효하지 않은 토큰입니다.");
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
 

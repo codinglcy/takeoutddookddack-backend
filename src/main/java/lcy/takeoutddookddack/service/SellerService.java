@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import lcy.takeoutddookddack.domain.CheckResult;
 import lcy.takeoutddookddack.domain.LoginResponse;
 import lcy.takeoutddookddack.domain.Seller;
+import lcy.takeoutddookddack.error.CustomException;
+import lcy.takeoutddookddack.error.ErrorCode;
 import lcy.takeoutddookddack.repository.SellerRepository;
 import lcy.takeoutddookddack.utils.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +63,7 @@ public class SellerService {
         Seller findSellerId = sellerRepository.findBySellerId(sellerId);
 
         if (findSellerId == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"존재하지 않는 아이디입니다.");
+            throw new CustomException(ErrorCode.SELLERID_NOT_FOUND);
         }
 
         if (passwordEncoder.matches(pwd, findSellerId.getPwd())){
@@ -71,7 +73,7 @@ public class SellerService {
                     .refreshToken(jwtProvider.createRefreshToken(findSellerId.getId(), sellerId))
                     .build();
         }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "비밀번호가 일치하지 않습니다");
+            throw new CustomException(ErrorCode.UNCORRECT_PASSWORD);
         }
     }
 
