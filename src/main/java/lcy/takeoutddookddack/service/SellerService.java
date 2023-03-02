@@ -1,28 +1,31 @@
 package lcy.takeoutddookddack.service;
 
 import com.mongodb.client.result.DeleteResult;
-import io.jsonwebtoken.Claims;
 import lcy.takeoutddookddack.domain.CheckResult;
 import lcy.takeoutddookddack.domain.LoginResponse;
 import lcy.takeoutddookddack.domain.Seller;
 import lcy.takeoutddookddack.error.CustomException;
 import lcy.takeoutddookddack.error.ErrorCode;
 import lcy.takeoutddookddack.repository.SellerRepository;
-import lcy.takeoutddookddack.utils.JwtProvider;
+import lcy.takeoutddookddack.jwt.JwtProvider;
+import lcy.takeoutddookddack.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class SellerService {
+    @Value("${config.url}")
+    private String siteUrl;
     private final SellerRepository sellerRepository;
+    private final ShopRepository shopRepository;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
 
@@ -54,9 +57,19 @@ public class SellerService {
         return allSeller;
     }
 
-    public Seller editSeller(String id, Seller seller){
+    public String editSeller(String token, Seller seller){
+        String id = jwtProvider.validateToken(token).get("id", String.class);
+        String sellerId = jwtProvider.validateToken(token).get("sellerId", String.class);
+
         Seller updatedSeller = sellerRepository.update(id, seller);
-        return updatedSeller;
+
+        if (sellerId != updatedSeller.getSellerId()){
+            String accessToken = jwtProvider.createAccessToken(updatedSeller.getId(), updatedSeller.getSellerId());
+            String shopId = shopRepository.findByUrl(siteUrl+"buypage/"+sellerId).getId();
+            shopRepository.updateUrl(shopId, updatedSeller.getSellerId());
+            return accessToken;
+        }
+        return "";
     }
 
     public LoginResponse login(String sellerId, String pwd){
@@ -67,18 +80,27 @@ public class SellerService {
         }
 
         if (passwordEncoder.matches(pwd, findSellerId.getPwd())){
+            String accessToken = jwtProvider.createAccessToken(findSellerId.getId(), sellerId);
+//            String refreshToken = jwtProvider.createRefreshToken();
+//
+//            sellerRepository.updateRefreshToken(findSellerId.getId(),refreshToken);
+
             return LoginResponse.builder()
                     .id(findSellerId.getId())
-                    .accessToken(jwtProvider.createAccessToken(findSellerId.getId(), sellerId))
-                    .refreshToken(jwtProvider.createRefreshToken(findSellerId.getId(), sellerId))
+                    .accessToken(accessToken)
                     .build();
         }else{
             throw new CustomException(ErrorCode.UNCORRECT_PASSWORD);
         }
     }
 
-    public DeleteResult removeById(String id){
+    public DeleteResult removeById(String token){
+        String id = jwtProvider.validateToken(token).get("id", String.class);
         return sellerRepository.deleteById(id);
+    }
+
+    public void checkToken(String token){
+        jwtProvider.validateToken(token);
     }
 
 }

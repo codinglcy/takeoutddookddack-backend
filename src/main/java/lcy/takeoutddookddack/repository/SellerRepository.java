@@ -54,6 +54,16 @@ public class SellerRepository extends AbstractRepository<Seller>{
         return updateSeller;
     }
 
+//    public void updateRefreshToken(String id, String refreshToken){
+//        Query query = new Query();
+//        Update update = new Update();
+//
+//        query.addCriteria(Criteria.where("_id").is(id));
+//        update.set("refreshToken", refreshToken);
+//
+//        template.updateFirst(query, update, Seller.class);
+//    }
+
     @Override
     public DeleteResult deleteById(String id) {
         return template.remove(new Query(Criteria.where("_id").is(id)), Seller.class);

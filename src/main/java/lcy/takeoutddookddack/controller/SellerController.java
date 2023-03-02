@@ -7,8 +7,6 @@ import lcy.takeoutddookddack.domain.LoginResponse;
 import lcy.takeoutddookddack.domain.Seller;
 import lcy.takeoutddookddack.service.SellerService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +17,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/seller")
-@Slf4j
 public class SellerController {
     @Value("${config.url}")
     private String siteUrl;
@@ -53,8 +50,8 @@ public class SellerController {
         return sellerList;
     }
 
-    @PatchMapping("/{id}")
-    public Seller editSeller(@PathVariable("id") String id, @RequestBody @Valid Seller sellerInfo){
+    @PatchMapping("/{token}")
+    public String editSeller(@PathVariable("token") String token, @RequestBody @Valid Seller sellerInfo){
         Seller updateSeller = Seller.builder()
                 .sellerId(sellerInfo.getSellerId())
                 .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
@@ -62,8 +59,9 @@ public class SellerController {
                 .email(sellerInfo.getEmail())
                 .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
                 .build();
-        Seller updatedSeller = sellerService.editSeller(id, updateSeller);
-        return updatedSeller;
+
+        String updateToken = sellerService.editSeller(token, updateSeller);
+        return updateToken;
     }
 
     @GetMapping("/login")
@@ -76,8 +74,13 @@ public class SellerController {
         return loginResponse;
     }
 
-    @DeleteMapping("/{id}")
-    public DeleteResult removeById(@PathVariable("id") String id){
-        return sellerService.removeById(id);
+    @DeleteMapping("/{token}")
+    public DeleteResult removeById(@PathVariable("token") String token){
+        return sellerService.removeById(token);
+    }
+
+    @GetMapping("/{token}")
+    public void checkToken(@PathVariable("token") String token){
+        sellerService.checkToken(token);
     }
 }
