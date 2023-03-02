@@ -31,11 +31,6 @@ public class OrdersRepository extends AbstractRepository<Orders> {
         return shopOrdersList;
     }
 
-    public List<Orders> findByStatus(OrderStatus status) {
-        List<Orders> statusOrdersList = template.find(new Query(Criteria.where("status").is(status)),Orders.class);
-        return statusOrdersList;
-    }
-
     public Orders updateStatus(String id, OrderStatus status) {
         Query query = new Query();
         Update update = new Update();
