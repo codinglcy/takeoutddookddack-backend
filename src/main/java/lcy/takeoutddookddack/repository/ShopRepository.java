@@ -37,13 +37,17 @@ public class ShopRepository extends AbstractRepository<Shop> {
         return shopList;
     }
 
+    public Shop findByUrl(String shopUrl){
+        Shop findShop = template.findOne(new Query(Criteria.where("shopUrl").is(shopUrl)), Shop.class);
+        return findShop;
+    }
+
     @Override
     public Shop update(String id, Shop shop) {
         Query query = new Query();
         Update update = new Update();
 
         query.addCriteria(Criteria.where("_id").is(id));
-        update.set("shopUrl", shop.getShopUrl());
         update.set("bankAccount", shop.getBankAccount());
         update.set("location", shop.getLocation());
 
@@ -51,7 +55,7 @@ public class ShopRepository extends AbstractRepository<Shop> {
         return updateShop;
     }
 
-    public Shop updateUrl(ObjectId id, String sellerId) {
+    public void updateUrl(String id, String sellerId) {
         Query query = new Query();
         Update update = new Update();
         String newShopUrl = siteUrl+"buypage/"+sellerId;
@@ -59,30 +63,41 @@ public class ShopRepository extends AbstractRepository<Shop> {
         query.addCriteria(Criteria.where("_id").is(id));
         update.set("shopUrl", newShopUrl);
 
-        Shop updateShop = template.findAndModify(query, update, Shop.class);
-        return updateShop;
+        template.updateFirst(query, update, Shop.class);
     }
 
-    public Shop addMenu(ObjectId id, Menu menu) {
+    public Shop addMenu(String id, Menu menu) {
         Query query = new Query();
         Update update = new Update();
 
         query.addCriteria(Criteria.where("_id").is(id));
         update.push("menu").each(menu);
 
-        Shop updateShop = template.findAndModify(query, update, Shop.class);
+        template.updateFirst(query, update, Shop.class);
+        Shop updateShop = template.findById(id, Shop.class);
         return updateShop;
     }
 
-    public Shop deleteMenu(ObjectId id, String menuItem) {
+    public Shop deleteMenu(String id, String menuItem) {
         Query query = new Query();
         Update update = new Update();
 
         query.addCriteria(Criteria.where("_id").is(id));
         update.pull("menu", new BasicDBObject("item", menuItem));
 
-        Shop updateShop = template.findAndModify(query, update, Shop.class);
+        template.updateFirst(query, update, Shop.class);
+        Shop updateShop = template.findById(id, Shop.class);
         return updateShop;
+    }
+
+    public void updateOpen(String id, boolean open){
+        Query query = new Query();
+        Update update = new Update();
+
+        query.addCriteria(Criteria.where("_id").is(id));
+        update.set("open", open);
+
+        template.updateFirst(query, update, Shop.class);
     }
 
     @Override
