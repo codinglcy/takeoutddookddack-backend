@@ -1,10 +1,12 @@
 package lcy.takeoutddookddack.controller;
 
 import com.mongodb.client.result.DeleteResult;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lcy.takeoutddookddack.domain.CheckResult;
 import lcy.takeoutddookddack.domain.LoginResponse;
 import lcy.takeoutddookddack.domain.Seller;
+import lcy.takeoutddookddack.jwt.SecurityUtil;
 import lcy.takeoutddookddack.service.SellerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,7 @@ public class SellerController {
 
     private final SellerService sellerService;
     private final PasswordEncoder passwordEncoder;
+    private final SecurityUtil securityUtil;
 
     @GetMapping("/idCheck")
     public CheckResult idCheck(@RequestBody Map<String,String> body){
@@ -50,8 +53,8 @@ public class SellerController {
         return sellerList;
     }
 
-    @PatchMapping("/{token}")
-    public String editSeller(@PathVariable("token") String token, @RequestBody @Valid Seller sellerInfo){
+    @PatchMapping("/")
+    public String editSeller(@RequestBody @Valid Seller sellerInfo){
         Seller updateSeller = Seller.builder()
                 .sellerId(sellerInfo.getSellerId())
                 .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
@@ -59,8 +62,9 @@ public class SellerController {
                 .email(sellerInfo.getEmail())
                 .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
                 .build();
+        Claims currentSeller = securityUtil.getCurrentSeller();
 
-        String updateToken = sellerService.editSeller(token, updateSeller);
+        String updateToken = sellerService.editSeller(currentSeller, updateSeller);
         return updateToken;
     }
 
@@ -74,13 +78,10 @@ public class SellerController {
         return loginResponse;
     }
 
-    @DeleteMapping("/{token}")
-    public DeleteResult removeById(@PathVariable("token") String token){
-        return sellerService.removeById(token);
+    @DeleteMapping("")
+    public DeleteResult removeById(){
+        Claims currentSeller = securityUtil.getCurrentSeller();
+        return sellerService.removeById(currentSeller);
     }
 
-    @GetMapping("/{token}")
-    public void checkToken(@PathVariable("token") String token){
-        sellerService.checkToken(token);
-    }
 }

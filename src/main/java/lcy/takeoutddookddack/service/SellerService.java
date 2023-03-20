@@ -1,6 +1,7 @@
 package lcy.takeoutddookddack.service;
 
 import com.mongodb.client.result.DeleteResult;
+import io.jsonwebtoken.Claims;
 import lcy.takeoutddookddack.domain.CheckResult;
 import lcy.takeoutddookddack.domain.LoginResponse;
 import lcy.takeoutddookddack.domain.Seller;
@@ -57,9 +58,9 @@ public class SellerService {
         return allSeller;
     }
 
-    public String editSeller(String token, Seller seller){
-        String id = jwtProvider.validateToken(token).get("id", String.class);
-        String sellerId = jwtProvider.validateToken(token).get("sellerId", String.class);
+    public String editSeller(Claims currentSeller, Seller seller){
+        String id = currentSeller.get("id", String.class);
+        String sellerId = currentSeller.get("sellerId", String.class);
 
         Seller updatedSeller = sellerRepository.update(id, seller);
 
@@ -94,8 +95,8 @@ public class SellerService {
         }
     }
 
-    public DeleteResult removeById(String token){
-        String id = jwtProvider.validateToken(token).get("id", String.class);
+    public DeleteResult removeById(Claims currentSeller){
+        String id = currentSeller.get("id", String.class);
         return sellerRepository.deleteById(id);
     }
 
