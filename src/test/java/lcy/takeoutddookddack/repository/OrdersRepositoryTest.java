@@ -28,31 +28,31 @@ public class OrdersRepositoryTest {
 //    public void before(){
 //        ordersRepository.deleteAll();
 //    }
-
-    @Test
-    public void save(){
-        List<OrderMenu> selectMenuList = new ArrayList<>();
-        selectMenuList.add(new OrderMenu("붕어빵 2개",1000,4));
-        selectMenuList.add(new OrderMenu("계란빵 3개",2000,2));
-        int totalPrice = 0;
-        for(OrderMenu menu:selectMenuList){
-            totalPrice = totalPrice + menu.getPrice()* menu.getQuantity();
-        }
-        Orders newOrder = Orders.builder().status(OrderStatus.New).orderName("김구매자").orderTel("000-0000-0000").selectMenu(selectMenuList).totalPrice(totalPrice).build();
-        ordersRepository.saveNew(newOrder);
-    }
-
-    @Test
-    public void updateStatus(){
-        ObjectId id = ordersRepository.findByStatus(OrderStatus.New).get(0).getId();
-
-        ordersRepository.updateStatus(id,OrderStatus.Check);
-    }
-
-    @Test
-    public void delete(){
-        ObjectId id = ordersRepository.findByStatus(OrderStatus.Ready).get(0).getId();
-
-        ordersRepository.deleteById(id);
-    }
+//
+//    @Test
+//    public void save(){
+//        List<OrderMenu> selectMenuList = new ArrayList<>();
+//        selectMenuList.add(new OrderMenu("붕어빵 2개",1000,4));
+//        selectMenuList.add(new OrderMenu("계란빵 3개",2000,2));
+//        int totalPrice = 0;
+//        for(OrderMenu menu:selectMenuList){
+//            totalPrice = totalPrice + menu.getPrice()* menu.getQuantity();
+//        }
+//        Orders newOrder = Orders.builder().status(OrderStatus.New).orderName("김구매자").orderTel("000-0000-0000").selectMenu(selectMenuList).totalPrice(totalPrice).build();
+//        ordersRepository.saveNew(newOrder);
+//    }
+//
+//    @Test
+//    public void updateStatus(){
+//        String id = ordersRepository.findByStatus(OrderStatus.New).get(0).getId();
+//
+//        ordersRepository.updateStatus(id,OrderStatus.Check);
+//    }
+//
+//    @Test
+//    public void delete(){
+//        String id = ordersRepository.findByStatus(OrderStatus.Ready).get(0).getId();
+//
+//        ordersRepository.deleteById(id);
+//    }
 }

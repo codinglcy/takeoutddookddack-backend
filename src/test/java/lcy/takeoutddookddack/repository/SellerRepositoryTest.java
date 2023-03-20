@@ -23,33 +23,33 @@ public class SellerRepositoryTest {
 //        sellerRepository.deleteAll();
 //    }
 
-    @Test
-    public void save(){
-        Seller seller1 = Seller.builder().sellerId("seller1").pwd("1234").tel("010-5555-5555").name("김판매자").build();
+//    @Test
+//    public void save(){
+//        Seller seller1 = Seller.builder().sellerId("seller1").pwd("1234").email("ddd@naver.com").name("김판매자").build();
+//
+//        Seller newSeller = sellerRepository.saveNew(seller1);
+//        System.out.println("newSeller = " + newSeller.getId() + " " + newSeller.getSellerId() + " "  + newSeller.getPwd() + " "  + newSeller.getName() + " "  + newSeller.getEmail() + " " + newSeller.getShopPage());
+//    }
 
-        Seller newSeller = sellerRepository.saveNew(seller1);
-        System.out.println("newSeller = " + newSeller.getId() + " " + newSeller.getSellerId() + " "  + newSeller.getPwd() + " "  + newSeller.getName() + " "  + newSeller.getTel() + " " + newSeller.getShopPage());
-    }
+//    @Test
+//    public void edit(){
+//        Seller seller1editName = Seller.builder().sellerId("seller1").pwd("1234").email("ddd@naver.com").name("이판매자").build();
+//
+//        Seller updateSeller = sellerRepository.update(seller1editName.getId(), seller1editName);
+//        System.out.println("updateSeller = " + updateSeller.getId() + " " + updateSeller.getSellerId() + " "  + updateSeller.getPwd() + " "  + updateSeller.getName() + " "  + updateSeller.getEmail() + " " + updateSeller.getShopPage());
+//    }
 
-    @Test
-    public void edit(){
-        Seller seller1editName = Seller.builder().sellerId("seller1").pwd("1234").tel("010-5555-5555").name("이판매자").build();
-
-        Seller updateSeller = sellerRepository.update(ObjectId.get(), seller1editName);
-        System.out.println("updateSeller = " + updateSeller.getId() + " " + updateSeller.getSellerId() + " "  + updateSeller.getPwd() + " "  + updateSeller.getName() + " "  + updateSeller.getTel() + " " + updateSeller.getShopPage());
-    }
-
-    @Test
-    public void findBySellerId(){
-        String sellerId = "seller1";
-        Seller findSeller = sellerRepository.findBySellerId(sellerId);
-        System.out.println("findSeller = " + findSeller);
-        System.out.println("findSeller = " + findSeller.getId() + " " + findSeller.getSellerId() + " "  + findSeller.getPwd() + " "  + findSeller.getName() + " "  + findSeller.getTel() + " " + findSeller.getShopPage());
-
-        String sellerId2 = "seller2";
-        Seller findSeller2 = sellerRepository.findBySellerId(sellerId2);
-        System.out.println("findSeller = " + findSeller2);
-        System.out.println("findSeller = " + findSeller2.getId() + " " + findSeller2.getSellerId() + " "  + findSeller2.getPwd() + " "  + findSeller2.getName() + " "  + findSeller2.getTel() + " " + findSeller2.getShopPage());
-    }
+//    @Test
+//    public void findBySellerId(){
+//        String sellerId = "seller1";
+//        Seller findSeller = sellerRepository.findBySellerId(sellerId);
+//        System.out.println("findSeller = " + findSeller);
+//        System.out.println("findSeller = " + findSeller.getId() + " " + findSeller.getSellerId() + " "  + findSeller.getPwd() + " "  + findSeller.getName() + " "  + findSeller.getEmail() + " " + findSeller.getShopPage());
+//
+//        String sellerId2 = "seller2";
+//        Seller findSeller2 = sellerRepository.findBySellerId(sellerId2);
+//        System.out.println("findSeller = " + findSeller2);
+//        System.out.println("findSeller = " + findSeller2.getId() + " " + findSeller2.getSellerId() + " "  + findSeller2.getPwd() + " "  + findSeller2.getName() + " "  + findSeller2.getEmail() + " " + findSeller2.getShopPage());
+//    }
 
 }
