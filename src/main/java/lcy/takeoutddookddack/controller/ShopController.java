@@ -86,7 +86,7 @@ public class ShopController {
     }
 
     //open여부 update
-    @PatchMapping("")
+    @PatchMapping("/open")
     public void updateOpen(@RequestBody Map<String, String> body){
         String shopId = body.get("shopId");
         boolean open = Boolean.parseBoolean(body.get("open"));
