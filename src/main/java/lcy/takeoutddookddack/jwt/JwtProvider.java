@@ -18,7 +18,7 @@ public class JwtProvider {
     @Value("${jwt.secret.key}")
     private String salt;
 
-    private final long accessExp = 1000L * 60 * 60 * 13; //13시간
+    private final long accessExp = 1000L * 60 * 60 * 2; //2시간
     private final long refreshExp = 1000L * 60 * 60 * 24 * 30 * 3; //3개월
 
     private Key getSecretKey(String salt){
@@ -47,13 +47,20 @@ public class JwtProvider {
 //                .compact();
 //    }
 
-    public Claims validateToken(String token){
+    public boolean validateToken(String token){
         try{
-            if (!token.substring(0,"BEARER ".length()).equalsIgnoreCase("BEARER ")){
-                throw new CustomException(ErrorCode.INVALID_TOKEN);
-            }else {
-                token = token.split(" ")[1].trim();
-            }
+            Jwts.parserBuilder()
+                    .setSigningKey(getSecretKey(salt))
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        }catch (JwtException e){
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+    }
+
+    public Claims parseClaims(String token){
+        try{
             return Jwts.parserBuilder()
                     .setSigningKey(getSecretKey(salt))
                     .build()
