@@ -43,7 +43,12 @@ public class SellerController {
                 .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
                 .build();
         Seller createdSeller = sellerService.create(newSeller);
-        return createdSeller;
+        return Seller.builder()
+                .sellerId(createdSeller.getSellerId())
+                .name(createdSeller.getName())
+                .email(createdSeller.getEmail())
+                .shopPage(createdSeller.getShopPage())
+                .build();
     }
 
     @GetMapping("/all")
