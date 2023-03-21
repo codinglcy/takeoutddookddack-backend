@@ -1,6 +1,7 @@
 package lcy.takeoutddookddack.repository;
 
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import lcy.takeoutddookddack.domain.Seller;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -54,6 +55,16 @@ public class SellerRepository extends AbstractRepository<Seller>{
 
         Seller updateSeller = template.findById(id, Seller.class);
         return updateSeller;
+    }
+
+    public void updatePwd(String id, String newPwd) {
+        Query query = new Query();
+        Update update = new Update();
+
+        query.addCriteria(Criteria.where("_id").is(id));
+        update.set("pwd", newPwd);
+
+        template.updateFirst(query, update, Seller.class);
     }
 
     public void updateRefreshToken(String id, String refreshToken){

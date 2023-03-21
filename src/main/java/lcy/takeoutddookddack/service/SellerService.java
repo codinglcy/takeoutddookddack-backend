@@ -11,11 +11,17 @@ import lcy.takeoutddookddack.jwt.JwtProvider;
 import lcy.takeoutddookddack.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+
+import static lcy.takeoutddookddack.error.ErrorCode.SELLERID_NOT_FOUND;
+import static lcy.takeoutddookddack.error.ErrorCode.UNCORRECT_NAME;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +32,7 @@ public class SellerService {
     private final ShopRepository shopRepository;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
+    private final JavaMailSender javaMailSender;
 
     public Seller create(Seller seller){
         Seller newSeller = sellerRepository.saveNew(seller);
@@ -60,6 +67,50 @@ public class SellerService {
         return seller;
     }
 
+    public String checkAndSendPwdmail(String sellerId, String name, String email){
+        Seller findSeller = sellerRepository.findBySellerId(sellerId);
+        if (findSeller == null){
+            throw new CustomException(SELLERID_NOT_FOUND);
+        }else if (name != findSeller.getName()){
+            throw new CustomException(UNCORRECT_NAME);
+        }else if (email != findSeller.getEmail()){
+            return "회원가입 시 입력해주신 이메일이 아닙니다.\n현재 입력하신 이메일 주소로 임시 비밀번호를 전송하시겠습니까?";
+        }
+
+        sendMail(sellerId, email);
+        return "이메일 "+email+"로 임시 비밀번호를 발송했습니다.";
+    }
+
+    public void sendMail(String sellerId, String email){
+        Seller findSeller = sellerRepository.findBySellerId(sellerId);
+
+        String tempPwd = tempPwd();
+        sellerRepository.updatePwd(findSeller.getId(), tempPwd);
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+
+        simpleMailMessage.setTo(email);
+        simpleMailMessage.setSubject("포장뚝딱 판매자 "+ sellerId +"님의 임시 비밀번호입니다.");
+        simpleMailMessage.setText("임시 비밀번호는 "+tempPwd+" 입니다. 로그인 하신 뒤 비밀번호를 변경해 주세요.");
+        javaMailSender.send(simpleMailMessage);
+
+    }
+
+    public String tempPwd(){
+        char[] charSet = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                '?', '!', '^', '~', '@', '*'};
+
+        String str = "";
+
+        int idx = 0;
+        for (int i = 0; i < 15; i++){
+            idx = (int) (charSet.length * Math.random());
+            str += charSet[idx];
+        }
+        return str;
+    }
+
     public String editSeller(Claims currentSeller, Seller seller){
         String id = currentSeller.get("id", String.class);
         String sellerId = currentSeller.get("sellerId", String.class);
@@ -79,7 +130,7 @@ public class SellerService {
         Seller findSellerId = sellerRepository.findBySellerId(sellerId);
 
         if (findSellerId == null){
-            throw new CustomException(ErrorCode.SELLERID_NOT_FOUND);
+            throw new CustomException(SELLERID_NOT_FOUND);
         }
 
         if (passwordEncoder.matches(pwd, findSellerId.getPwd())){

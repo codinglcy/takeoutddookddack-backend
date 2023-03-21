@@ -71,6 +71,24 @@ public class SellerController {
                 .build();
     }
 
+    @PatchMapping("/checkpwdmail")
+    public String checkpwdmail(@RequestBody Map<String, String> body){
+        String sellerId = body.get("sellerId");
+        String name = body.get("name");
+        String email = body.get("email");
+
+        return sellerService.checkAndSendPwdmail(sellerId, name, email);
+    }
+
+    @PatchMapping("/pwdmail")
+    public String pwdmail(@RequestBody Map<String, String> body){
+        String sellerId = body.get("sellerId");
+        String email = body.get("email");
+
+        sellerService.sendMail(sellerId, email);
+        return "이메일 "+email+"로 임시 비밀번호를 발송했습니다.";
+    }
+
     @PatchMapping("/")
     public String editSeller(@RequestBody @Valid Seller sellerInfo){
         Seller updateSeller;
