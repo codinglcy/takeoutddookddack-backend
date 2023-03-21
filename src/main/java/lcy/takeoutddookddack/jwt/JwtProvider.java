@@ -38,14 +38,14 @@ public class JwtProvider {
                 .compact();
     }
 
-//    public String createRefreshToken(){
-//        Date now = new Date();
-//        return Jwts.builder()
-//                .setIssuedAt(now)
-//                .setExpiration(new Date(now.getTime() + refreshExp))
-//                .signWith(getSecretKey(salt), SignatureAlgorithm.HS256)
-//                .compact();
-//    }
+    public String createRefreshToken(){
+        Date now = new Date();
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshExp))
+                .signWith(getSecretKey(salt), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
     public boolean validateToken(String token){
         try{

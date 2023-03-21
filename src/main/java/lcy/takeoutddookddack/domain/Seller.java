@@ -28,13 +28,15 @@ public class Seller {
     private String email;
     private String name;
     private String shopPage;
+    private String refreshToken;
 
     @Builder
-    public Seller(String sellerId, String pwd, String email, String name, String shopPage){
+    public Seller(String sellerId, String pwd, String email, String name, String shopPage, String refreshToken){
         this.sellerId = sellerId;
         this.pwd = pwd;
         this.email = email;
         this.name = name;
         this.shopPage = shopPage;
+        this.refreshToken = refreshToken;
     }
 }

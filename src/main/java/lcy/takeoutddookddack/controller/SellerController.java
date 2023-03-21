@@ -4,7 +4,6 @@ import com.mongodb.client.result.DeleteResult;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import lcy.takeoutddookddack.domain.CheckResult;
-import lcy.takeoutddookddack.domain.LoginResponse;
 import lcy.takeoutddookddack.domain.Seller;
 import lcy.takeoutddookddack.jwt.SecurityUtil;
 import lcy.takeoutddookddack.service.SellerService;
@@ -69,19 +68,35 @@ public class SellerController {
     }
 
     @GetMapping("/login")
-    public LoginResponse login(@RequestBody Map<String, String> loginInfo){
+    public String login(@RequestBody Map<String, String> loginInfo){
         String loginSellerId = loginInfo.get("sellerId");
         String loginPassword = loginInfo.get("pwd");
 
-        LoginResponse loginResponse = sellerService.login(loginSellerId, loginPassword);
+        String loginResponse = sellerService.login(loginSellerId, loginPassword);
 
         return loginResponse;
+    }
+
+    @DeleteMapping("/logout")
+    public void logout(){
+        Claims currentSeller = securityUtil.getCurrentSeller();
+        sellerService.logout(currentSeller.getId());
     }
 
     @DeleteMapping("")
     public DeleteResult removeById(){
         Claims currentSeller = securityUtil.getCurrentSeller();
         return sellerService.removeById(currentSeller);
+    }
+
+    @GetMapping("/checkToken")
+    public String checkToken(){
+        Claims currentSeller = securityUtil.getCurrentSeller();
+        if (currentSeller != null){
+            return "로그인 상태입니다.";
+        }
+        String result = sellerService.checkRefreshToken(currentSeller.getId());
+        return result;
     }
 
 }

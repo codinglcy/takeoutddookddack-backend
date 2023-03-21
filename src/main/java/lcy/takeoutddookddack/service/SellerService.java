@@ -3,7 +3,6 @@ package lcy.takeoutddookddack.service;
 import com.mongodb.client.result.DeleteResult;
 import io.jsonwebtoken.Claims;
 import lcy.takeoutddookddack.domain.CheckResult;
-import lcy.takeoutddookddack.domain.LoginResponse;
 import lcy.takeoutddookddack.domain.Seller;
 import lcy.takeoutddookddack.error.CustomException;
 import lcy.takeoutddookddack.error.ErrorCode;
@@ -15,10 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -73,7 +70,7 @@ public class SellerService {
         return "";
     }
 
-    public LoginResponse login(String sellerId, String pwd){
+    public String login(String sellerId, String pwd){
         Seller findSellerId = sellerRepository.findBySellerId(sellerId);
 
         if (findSellerId == null){
@@ -82,14 +79,11 @@ public class SellerService {
 
         if (passwordEncoder.matches(pwd, findSellerId.getPwd())){
             String accessToken = jwtProvider.createAccessToken(findSellerId.getId(), sellerId);
-//            String refreshToken = jwtProvider.createRefreshToken();
-//
-//            sellerRepository.updateRefreshToken(findSellerId.getId(),refreshToken);
+            String refreshToken = jwtProvider.createRefreshToken();
 
-            return LoginResponse.builder()
-                    .id(findSellerId.getId())
-                    .accessToken(accessToken)
-                    .build();
+            sellerRepository.updateRefreshToken(findSellerId.getId(),refreshToken);
+
+            return accessToken;
         }else{
             throw new CustomException(ErrorCode.UNCORRECT_PASSWORD);
         }
@@ -100,8 +94,30 @@ public class SellerService {
         return sellerRepository.deleteById(id);
     }
 
-    public void checkToken(String token){
-        jwtProvider.validateToken(token);
+    public String checkRefreshToken(String id){
+        Seller seller = sellerRepository.findById(id);
+        String refreshToken = seller.getRefreshToken();
+
+        Date exp = jwtProvider.parseClaims(refreshToken).getExpiration();
+        Date now = new Date();
+        long diffDays = ((exp.getTime() - now.getTime()) / 1000) / (24*60*60);
+
+        if (exp.before(now)){
+            return "리프레시토큰 만료. 재로그인 해주세요.";
+        }else {
+            if (diffDays <= 14){
+                String newRefreshToken = jwtProvider.createRefreshToken();
+                sellerRepository.updateRefreshToken(id, newRefreshToken);
+            }
+
+            String newAccessToken = jwtProvider.createAccessToken(id, seller.getSellerId());
+            return newAccessToken;
+        }
+
+    }
+
+    public void logout(String id){
+        sellerRepository.deleteRefreshToken(id);
     }
 
 }
