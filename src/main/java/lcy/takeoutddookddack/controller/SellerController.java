@@ -54,13 +54,24 @@ public class SellerController {
 
     @PatchMapping("/")
     public String editSeller(@RequestBody @Valid Seller sellerInfo){
-        Seller updateSeller = Seller.builder()
-                .sellerId(sellerInfo.getSellerId())
-                .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
-                .name(sellerInfo.getName())
-                .email(sellerInfo.getEmail())
-                .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
-                .build();
+        Seller updateSeller;
+        if (sellerInfo.getPwd() == null){
+            updateSeller = Seller.builder()
+                    .sellerId(sellerInfo.getSellerId())
+                    .name(sellerInfo.getName())
+                    .email(sellerInfo.getEmail())
+                    .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
+                    .build();
+        }else{
+            updateSeller = Seller.builder()
+                    .sellerId(sellerInfo.getSellerId())
+                    .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
+                    .name(sellerInfo.getName())
+                    .email(sellerInfo.getEmail())
+                    .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
+                    .build();
+        }
+
         Claims currentSeller = securityUtil.getCurrentSeller();
 
         String updateToken = sellerService.editSeller(currentSeller, updateSeller);
