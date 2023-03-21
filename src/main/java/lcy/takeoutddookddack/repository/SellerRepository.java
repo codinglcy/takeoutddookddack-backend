@@ -43,7 +43,9 @@ public class SellerRepository extends AbstractRepository<Seller>{
 
         query.addCriteria(Criteria.where("_id").is(id));
         update.set("sellerId", seller.getSellerId());
-        update.set("pwd", seller.getPwd());
+        if (seller.getPwd() != null){
+            update.set("pwd", seller.getPwd());
+        }
         update.set("email", seller.getEmail());
         update.set("name", seller.getName());
         update.set("shopPage", seller.getShopPage());

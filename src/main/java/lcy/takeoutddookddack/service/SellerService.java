@@ -55,6 +55,11 @@ public class SellerService {
         return allSeller;
     }
 
+    public Seller findById(String id){
+        Seller seller = sellerRepository.findById(id);
+        return seller;
+    }
+
     public String editSeller(Claims currentSeller, Seller seller){
         String id = currentSeller.get("id", String.class);
         String sellerId = currentSeller.get("sellerId", String.class);

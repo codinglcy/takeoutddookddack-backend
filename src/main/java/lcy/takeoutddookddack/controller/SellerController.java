@@ -52,25 +52,30 @@ public class SellerController {
         return sellerList;
     }
 
+    @GetMapping("")
+    public Seller getSeller(){
+        Claims currentSeller = securityUtil.getCurrentSeller();
+        String id = currentSeller.get("id", String.class);
+
+        Seller seller = sellerService.findById(id);
+        return Seller.builder()
+                .sellerId(seller.getSellerId())
+                .email(seller.getEmail())
+                .name(seller.getName())
+                .shopPage(seller.getShopPage())
+                .build();
+    }
+
     @PatchMapping("/")
     public String editSeller(@RequestBody @Valid Seller sellerInfo){
         Seller updateSeller;
-        if (sellerInfo.getPwd() == null){
-            updateSeller = Seller.builder()
-                    .sellerId(sellerInfo.getSellerId())
-                    .name(sellerInfo.getName())
-                    .email(sellerInfo.getEmail())
-                    .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
-                    .build();
-        }else{
-            updateSeller = Seller.builder()
-                    .sellerId(sellerInfo.getSellerId())
-                    .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
-                    .name(sellerInfo.getName())
-                    .email(sellerInfo.getEmail())
-                    .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
-                    .build();
-        }
+        updateSeller = Seller.builder()
+                .sellerId(sellerInfo.getSellerId())
+                .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
+                .name(sellerInfo.getName())
+                .email(sellerInfo.getEmail())
+                .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
+                .build();
 
         Claims currentSeller = securityUtil.getCurrentSeller();
 
