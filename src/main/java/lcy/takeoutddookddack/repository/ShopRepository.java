@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.DeleteResult;
 import lcy.takeoutddookddack.domain.Menu;
 import lcy.takeoutddookddack.domain.Shop;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

@@ -1,7 +1,6 @@
 package lcy.takeoutddookddack.repository;
 
 import com.mongodb.client.result.DeleteResult;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 

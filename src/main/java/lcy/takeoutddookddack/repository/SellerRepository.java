@@ -1,9 +1,7 @@
 package lcy.takeoutddookddack.repository;
 
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import lcy.takeoutddookddack.domain.Seller;
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
