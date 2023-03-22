@@ -31,8 +31,8 @@ public class OrderController {
     }
 
     //status 수정
-    @PatchMapping("/{id}/{status}")
-    public void updateStatus(@PathVariable("id")String id, @PathVariable("status") OrderStatus status){
+    @PatchMapping("/{id}")
+    public void updateStatus(@PathVariable("id")String id, @RequestParam("status") OrderStatus status){
         orderService.updateStatus(id, status);
     }
 
