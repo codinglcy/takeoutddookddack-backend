@@ -39,8 +39,8 @@ public class ShopController {
 
     //생성
     @PostMapping("")
-    public Shop createShop(){
-        String sellerId = securityUtil.getCurrentSeller().get("sellerId", String.class);
+    public Shop createShop(@RequestBody Map<String, String> body){
+        String sellerId = body.get("sellerId");
         Shop newShop = Shop.builder().shopUrl(siteUrl + "buypage/" + sellerId).build();
         return shopService.create(newShop);
     }
