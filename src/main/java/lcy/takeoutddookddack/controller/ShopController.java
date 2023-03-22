@@ -1,7 +1,9 @@
 package lcy.takeoutddookddack.controller;
 
+import io.jsonwebtoken.Claims;
 import lcy.takeoutddookddack.domain.Menu;
 import lcy.takeoutddookddack.domain.Shop;
+import lcy.takeoutddookddack.jwt.SecurityUtil;
 import lcy.takeoutddookddack.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +19,7 @@ public class ShopController {
     @Value("${config.url}")
     private String siteUrl;
     private final ShopService shopService;
+    private final SecurityUtil securityUtil;
 
     //주소별찾기
 //    @GetMapping("/location?city")
@@ -28,14 +31,16 @@ public class ShopController {
     }
 
     //url로 찾기
-    @GetMapping("/{sellerId}")
-    public Shop findShopByUrl(@PathVariable("sellerId") String sellerId){
+    @GetMapping("")
+    public Shop findShopByUrl(){
+        String sellerId = securityUtil.getCurrentSeller().get("sellerId", String.class);
         return shopService.findByUrl(siteUrl+"buypage/"+sellerId);
     }
 
     //생성
-    @PostMapping("/{sellerId}")
-    public Shop createShop(@PathVariable("sellerId") String sellerId){
+    @PostMapping("")
+    public Shop createShop(){
+        String sellerId = securityUtil.getCurrentSeller().get("sellerId", String.class);
         Shop newShop = Shop.builder().shopUrl(siteUrl + "buypage/" + sellerId).build();
         return shopService.create(newShop);
     }
@@ -55,42 +60,47 @@ public class ShopController {
     //메뉴추가
     @PatchMapping("/addmenu")
     public Shop addMenu(@RequestBody Map<String,String> body){
-        String shopId = body.get("shopId");
+        String id = body.get("id");
         String item = body.get("item");
         int price = Integer.parseInt(body.get("price"));
 
         Menu menu = Menu.builder().item(item).price(price).build();
 
-        Shop shop = shopService.addMenu(shopId, menu);
+        Shop shop = shopService.addMenu(id, menu);
         return shop;
     }
 
     //메뉴삭제
     @PatchMapping("/deletemenu")
     public Shop deleteMenu(@RequestBody Map<String,String> body){
-        String shopId = body.get("shopId");
+        String id = body.get("id");
         String item = body.get("item");
 
-        Shop shop = shopService.deleteMenu(shopId, item);
+        Shop shop = shopService.deleteMenu(id, item);
         return shop;
     }
 
     //페이지삭제
-    @DeleteMapping("/{id}")
-    public String deleteShop(@PathVariable("id") String shopId){
-        long result = shopService.deleteShop(shopId).getDeletedCount();
+    @DeleteMapping("")
+    public String deleteShop(){
+        Claims currentSeller = securityUtil.getCurrentSeller();
+        String sellerId = currentSeller.get("sellerId", String.class);
+        String shopUrl = siteUrl+"buypage/"+sellerId;
+
+        long result = shopService.deleteShop(shopUrl).getDeletedCount();
         if (result == 1){
             return "성공적으로 삭제했습니다.";
         }
         return "페이지가 없거나 정상적으로 삭제되지 않았습니다.";
     }
 
-    //open여부 update
+    //open여부 update (/open?value=truefalse)
     @PatchMapping("/open")
-    public void updateOpen(@RequestBody Map<String, String> body){
-        String shopId = body.get("shopId");
-        boolean open = Boolean.parseBoolean(body.get("open"));
+    public void updateOpen(@RequestParam("value") boolean isOpen){
+        Claims currentSeller = securityUtil.getCurrentSeller();
+        String sellerId = currentSeller.get("sellerId", String.class);
+        String shopUrl = siteUrl+"buypage/"+sellerId;
 
-        shopService.updateOpen(shopId, open);
+        shopService.updateOpen(shopUrl, isOpen);
     }
 }

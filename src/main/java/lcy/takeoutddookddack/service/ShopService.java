@@ -51,12 +51,15 @@ public class ShopService {
         return updatedShop;
     }
 
-    public void updateOpen(String id, boolean open){
-        shopRepository.updateOpen(id, open);
+    public void updateOpen(String shopUrl, boolean open){
+        Shop findShop = shopRepository.findByUrl(shopUrl);
+
+        shopRepository.updateOpen(findShop.getId(), open);
     }
 
-    public DeleteResult deleteShop(String id){
-        DeleteResult deleteResult = shopRepository.deleteById(id);
+    public DeleteResult deleteShop(String shopUrl){
+        Shop findShop = shopRepository.findByUrl(shopUrl);
+        DeleteResult deleteResult = shopRepository.deleteById(findShop.getId());
         return deleteResult;
     }
 
