@@ -55,7 +55,7 @@ public class SellerRepository extends AbstractRepository<Seller>{
         return updateSeller;
     }
 
-    public void updatePwd(String id, String newPwd) {
+    public Seller updatePwd(String id, String newPwd) {
         Query query = new Query();
         Update update = new Update();
 
@@ -63,9 +63,10 @@ public class SellerRepository extends AbstractRepository<Seller>{
         update.set("pwd", newPwd);
 
         template.updateFirst(query, update, Seller.class);
+        return template.findOne(query, Seller.class);
     }
 
-    public void updateRefreshToken(String id, String refreshToken){
+    public Seller updateRefreshToken(String id, String refreshToken){
         Query query = new Query();
         Update update = new Update();
 
@@ -73,9 +74,10 @@ public class SellerRepository extends AbstractRepository<Seller>{
         update.set("refreshToken", refreshToken);
 
         template.updateFirst(query, update, Seller.class);
+        return template.findOne(query, Seller.class);
     }
 
-    public void deleteRefreshToken(String id){
+    public Seller deleteRefreshToken(String id){
         Query query = new Query();
         Update update = new Update();
 
@@ -83,6 +85,7 @@ public class SellerRepository extends AbstractRepository<Seller>{
         update.set("refreshToken", null);
 
         template.updateFirst(query, update, Seller.class);
+        return template.findOne(query, Seller.class);
     }
 
     @Override

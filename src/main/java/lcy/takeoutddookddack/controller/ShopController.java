@@ -41,7 +41,7 @@ public class ShopController {
     @PostMapping("")
     public Shop createShop(@RequestBody Map<String, String> body){
         String sellerId = body.get("sellerId");
-        Shop newShop = Shop.builder().shopUrl(siteUrl + "buypage/" + sellerId).build();
+        Shop newShop = Shop.builder().shopUrl(siteUrl + "buypage/" + sellerId).open(false).build();
         return shopService.create(newShop);
     }
 

@@ -21,7 +21,12 @@ public class ShopRepository extends AbstractRepository<Shop> {
     @Override
     public Shop saveNew(Shop shop) {
         Shop newShop = template.save(shop);
-        return newShop;
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("shopUrl").is(newShop.getShopUrl()));
+        Shop findNewShop = template.findOne(query, Shop.class);
+
+        return findNewShop;
     }
 
     @Override
@@ -50,7 +55,8 @@ public class ShopRepository extends AbstractRepository<Shop> {
         update.set("bankAccount", shop.getBankAccount());
         update.set("location", shop.getLocation());
 
-        Shop updateShop = template.findAndModify(query, update, Shop.class);
+        template.updateFirst(query, update, Shop.class);
+        Shop updateShop = template.findOne(query, Shop.class);
         return updateShop;
     }
 
@@ -89,7 +95,7 @@ public class ShopRepository extends AbstractRepository<Shop> {
         return updateShop;
     }
 
-    public void updateOpen(String id, boolean open){
+    public Shop updateOpen(String id, boolean open){
         Query query = new Query();
         Update update = new Update();
 
@@ -97,6 +103,7 @@ public class ShopRepository extends AbstractRepository<Shop> {
         update.set("open", open);
 
         template.updateFirst(query, update, Shop.class);
+        return template.findOne(query, Shop.class);
     }
 
     @Override

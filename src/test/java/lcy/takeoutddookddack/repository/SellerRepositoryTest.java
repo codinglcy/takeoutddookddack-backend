@@ -1,50 +1,108 @@
 package lcy.takeoutddookddack.repository;
 
+import com.mongodb.client.result.DeleteResult;
+import lcy.takeoutddookddack.domain.Seller;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 @Transactional
 @Rollback(false)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SellerRepositoryTest {
 
     @Autowired
     SellerRepository sellerRepository;
 
-//    @BeforeEach
-//    public void before(){
-//        sellerRepository.deleteAll();
-//    }
+    @BeforeAll
+    public void before(){
+        sellerRepository.deleteAll();
+    }
 
-//    @Test
-//    public void save(){
-//        Seller seller1 = Seller.builder().sellerId("seller1").pwd("1234").email("ddd@naver.com").name("김판매자").build();
-//
-//        Seller newSeller = sellerRepository.saveNew(seller1);
-//        System.out.println("newSeller = " + newSeller.getId() + " " + newSeller.getSellerId() + " "  + newSeller.getPwd() + " "  + newSeller.getName() + " "  + newSeller.getEmail() + " " + newSeller.getShopPage());
-//    }
+    @Test
+    public void saveAndfindBySellerId(){
+        String sellerId = "seller1";
+        Seller seller1 = Seller.builder().sellerId(sellerId).pwd("1234").email("ddd@naver.com").name("김판매자").build();
 
-//    @Test
-//    public void edit(){
-//        Seller seller1editName = Seller.builder().sellerId("seller1").pwd("1234").email("ddd@naver.com").name("이판매자").build();
-//
-//        Seller updateSeller = sellerRepository.update(seller1editName.getId(), seller1editName);
-//        System.out.println("updateSeller = " + updateSeller.getId() + " " + updateSeller.getSellerId() + " "  + updateSeller.getPwd() + " "  + updateSeller.getName() + " "  + updateSeller.getEmail() + " " + updateSeller.getShopPage());
-//    }
+        sellerRepository.saveNew(seller1);
+        Seller sellerFind = sellerRepository.findBySellerId(sellerId);
 
-//    @Test
-//    public void findBySellerId(){
-//        String sellerId = "seller1";
-//        Seller findSeller = sellerRepository.findBySellerId(sellerId);
-//        System.out.println("findSeller = " + findSeller);
-//        System.out.println("findSeller = " + findSeller.getId() + " " + findSeller.getSellerId() + " "  + findSeller.getPwd() + " "  + findSeller.getName() + " "  + findSeller.getEmail() + " " + findSeller.getShopPage());
-//
-//        String sellerId2 = "seller2";
-//        Seller findSeller2 = sellerRepository.findBySellerId(sellerId2);
-//        System.out.println("findSeller = " + findSeller2);
-//        System.out.println("findSeller = " + findSeller2.getId() + " " + findSeller2.getSellerId() + " "  + findSeller2.getPwd() + " "  + findSeller2.getName() + " "  + findSeller2.getEmail() + " " + findSeller2.getShopPage());
-//    }
+        assertThat(sellerFind.getSellerId()).isEqualTo(seller1.getSellerId());
+        assertThat(sellerFind.getPwd()).isEqualTo(seller1.getPwd());
+        assertThat(sellerFind.getEmail()).isEqualTo(seller1.getEmail());
+        assertThat(sellerFind.getName()).isEqualTo(seller1.getName());
+    }
+
+    @Test
+    public void update(){
+        Seller seller = Seller.builder().sellerId("seller2").pwd("1234").email("ddd@gmail.com").name("이판매자").build();
+        sellerRepository.saveNew(seller);
+        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+
+        Seller editName = Seller.builder().sellerId("Seller2").email("ddd@gmail.com").name("이판매자").build();
+        Seller updateSeller = sellerRepository.update(id, editName);
+
+        assertThat(updateSeller.getId()).isEqualTo(id);
+        assertThat(updateSeller.getSellerId()).isEqualTo(editName.getSellerId());
+        assertThat(updateSeller.getPwd()).isEqualTo(seller.getPwd());
+        assertThat(updateSeller.getEmail()).isEqualTo(seller.getEmail());
+        assertThat(updateSeller.getName()).isEqualTo(editName.getName());
+    }
+
+    @Test
+    public void updatePwd(){
+        Seller seller = Seller.builder().sellerId("seller3").pwd("1234").email("ddd@gmail.com").name("이판매자").build();
+        sellerRepository.saveNew(seller);
+        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+
+        String editPwd = "5555";
+        Seller updateSeller = sellerRepository.updatePwd(id, editPwd);
+
+        assertThat(updateSeller.getPwd()).isEqualTo(editPwd);
+    }
+
+    @Test
+    public void updateRefreshToken(){
+        Seller seller = Seller.builder().sellerId("seller4").pwd("1234").email("ddd@gmail.com").name("이판매자").build();
+        sellerRepository.saveNew(seller);
+        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+        System.out.println("seller = " + seller.getRefreshToken());
+
+        String newRefreshToken = "refreshToken5555";
+        Seller updateSeller = sellerRepository.updateRefreshToken(id, newRefreshToken);
+        System.out.println("updateSeller = " + updateSeller.getRefreshToken());
+
+        assertThat(updateSeller.getRefreshToken()).isEqualTo(newRefreshToken);
+    }
+
+    @Test
+    public void deleteRefreshToken(){
+        Seller seller = Seller.builder().sellerId("seller5").refreshToken("refreshToken").build();
+        sellerRepository.saveNew(seller);
+        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+
+        Seller updateSeller = sellerRepository.deleteRefreshToken(id);
+
+        assertThat(updateSeller.getRefreshToken()).isNull();
+    }
+
+    @Test
+    public void deleteById(){
+        Seller seller = Seller.builder().sellerId("seller6").pwd("55556666").email("ddd@gmail.com").name("판매자").build();
+        sellerRepository.saveNew(seller);
+        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+
+        DeleteResult result = sellerRepository.deleteById(id);
+
+        assertThat(result.getDeletedCount()).isEqualTo(1);
+    }
+
 
 }

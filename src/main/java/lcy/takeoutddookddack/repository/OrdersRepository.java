@@ -16,6 +16,7 @@ public class OrdersRepository extends AbstractRepository<Orders> {
     @Override
     public Orders saveNew(Orders orders) {
         Orders newOrder = template.save(orders);
+
         return newOrder;
     }
 
@@ -38,7 +39,8 @@ public class OrdersRepository extends AbstractRepository<Orders> {
         update.set("status", status);
         update.set("updatedAt", LocalDateTime.now());
 
-        Orders updateOrder = template.findAndModify(query, update, Orders.class);
+        template.updateFirst(query, update, Orders.class);
+        Orders updateOrder = template.findOne(query, Orders.class);
         return updateOrder;
     }
 
