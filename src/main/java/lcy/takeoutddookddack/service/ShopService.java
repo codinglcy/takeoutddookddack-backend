@@ -3,7 +3,6 @@ package lcy.takeoutddookddack.service;
 import com.mongodb.client.result.DeleteResult;
 import lcy.takeoutddookddack.domain.Menu;
 import lcy.takeoutddookddack.domain.Shop;
-import lcy.takeoutddookddack.jwt.JwtProvider;
 import lcy.takeoutddookddack.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import java.util.List;
 public class ShopService {
 
     private final ShopRepository shopRepository;
-    private final JwtProvider jwtProvider;
 
     public Shop create(Shop shop){
         Shop newShop = shopRepository.saveNew(shop);
