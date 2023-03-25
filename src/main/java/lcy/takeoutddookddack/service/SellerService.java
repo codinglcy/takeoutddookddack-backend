@@ -70,9 +70,9 @@ public class SellerService {
         Seller findSeller = sellerRepository.findBySellerId(sellerId);
         if (findSeller == null){
             throw new CustomException(SELLERID_NOT_FOUND);
-        }else if (name.equals(findSeller.getName())){
+        }else if (!name.equals(findSeller.getName())){
             throw new CustomException(UNCORRECT_NAME);
-        }else if (email.equals(findSeller.getEmail())){
+        }else if (!email.equals(findSeller.getEmail())){
             return "이메일이 회원정보와 일치하지 않습니다.\n현재 입력하신 이메일 주소로 임시 비밀번호를 전송하시겠습니까?";
         }
 
@@ -116,7 +116,7 @@ public class SellerService {
 
         Seller updatedSeller = sellerRepository.update(id, seller);
 
-        if (sellerId != updatedSeller.getSellerId()){
+        if (!sellerId.equals(updatedSeller.getSellerId())){
             String accessToken = jwtProvider.createAccessToken(updatedSeller.getId(), updatedSeller.getSellerId());
             String shopId = shopRepository.findByUrl(siteUrl+"buypage/"+sellerId).getId();
             shopRepository.updateUrl(shopId, updatedSeller.getSellerId());
