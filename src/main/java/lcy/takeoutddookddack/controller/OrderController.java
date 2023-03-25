@@ -27,7 +27,15 @@ public class OrderController {
     //생성
     @PostMapping("")
     public void create(@RequestBody Orders order){
-        orderService.create(order);
+        Orders newOrder = Orders.builder()
+                .orderName(order.getOrderName())
+                .orderTel(order.getOrderTel())
+                .selectMenu(order.getSelectMenu())
+                .totalPrice(order.getTotalPrice())
+                .status(order.getStatus())
+                .sellerId(order.getSellerId())
+                .build();
+        orderService.create(newOrder);
     }
 
     //status 수정
