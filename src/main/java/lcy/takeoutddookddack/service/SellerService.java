@@ -70,10 +70,10 @@ public class SellerService {
         Seller findSeller = sellerRepository.findBySellerId(sellerId);
         if (findSeller == null){
             throw new CustomException(SELLERID_NOT_FOUND);
-        }else if (name != findSeller.getName()){
+        }else if (name.equals(findSeller.getName())){
             throw new CustomException(UNCORRECT_NAME);
-        }else if (email != findSeller.getEmail()){
-            return "회원가입 시 입력해주신 이메일이 아닙니다.\n현재 입력하신 이메일 주소로 임시 비밀번호를 전송하시겠습니까?";
+        }else if (email.equals(findSeller.getEmail())){
+            return "이메일이 회원정보와 일치하지 않습니다.\n현재 입력하신 이메일 주소로 임시 비밀번호를 전송하시겠습니까?";
         }
 
         sendMail(sellerId, email);
