@@ -14,8 +14,8 @@ public class SellerRepository extends AbstractRepository<Seller>{
 
     @Override
     public Seller saveNew(Seller seller) {
-        Seller newSeller = template.save(seller);
-        return newSeller;
+        template.save(seller);
+        return findBySellerId(seller.getSellerId());
     }
 
     @Override

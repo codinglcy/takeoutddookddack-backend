@@ -44,6 +44,7 @@ public class SellerController {
                 .build();
         Seller createdSeller = sellerService.create(newSeller);
         return Seller.builder()
+                .id(createdSeller.getId())
                 .sellerId(createdSeller.getSellerId())
                 .name(createdSeller.getName())
                 .email(createdSeller.getEmail())
@@ -64,6 +65,7 @@ public class SellerController {
 
         Seller seller = sellerService.findById(id);
         return Seller.builder()
+                .id(seller.getId())
                 .sellerId(seller.getSellerId())
                 .email(seller.getEmail())
                 .name(seller.getName())
@@ -89,16 +91,26 @@ public class SellerController {
         return "이메일 "+email+"로 임시 비밀번호를 발송했습니다.";
     }
 
-    @PatchMapping("/")
+    @PatchMapping("")
     public String editSeller(@RequestBody @Valid Seller sellerInfo){
         Seller updateSeller;
-        updateSeller = Seller.builder()
-                .sellerId(sellerInfo.getSellerId())
-                .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
-                .name(sellerInfo.getName())
-                .email(sellerInfo.getEmail())
-                .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
-                .build();
+
+        if (sellerInfo.getPwd() == null){
+            updateSeller = Seller.builder()
+                    .sellerId(sellerInfo.getSellerId())
+                    .name(sellerInfo.getName())
+                    .email(sellerInfo.getEmail())
+                    .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
+                    .build();
+        }else{
+            updateSeller = Seller.builder()
+                    .sellerId(sellerInfo.getSellerId())
+                    .pwd(passwordEncoder.encode(sellerInfo.getPwd()))
+                    .name(sellerInfo.getName())
+                    .email(sellerInfo.getEmail())
+                    .shopPage(siteUrl+"buypage/"+sellerInfo.getSellerId())
+                    .build();
+        }
 
         Claims currentSeller = securityUtil.getCurrentSeller();
 

@@ -1,5 +1,6 @@
 package lcy.takeoutddookddack.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +27,8 @@ public class Seller {
     private String refreshToken;
 
     @Builder
-    public Seller(String sellerId, String pwd, String email, String name, String shopPage, String refreshToken){
+    public Seller(String id, String sellerId, String pwd, String email, String name, String shopPage, String refreshToken){
+        this.id = id;
         this.sellerId = sellerId;
         this.pwd = pwd;
         this.email = email;

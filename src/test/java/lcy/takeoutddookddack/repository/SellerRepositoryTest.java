@@ -31,20 +31,18 @@ public class SellerRepositoryTest {
         String sellerId = "seller1";
         Seller seller1 = Seller.builder().sellerId(sellerId).pwd("1234").email("ddd@naver.com").name("김판매자").build();
 
-        sellerRepository.saveNew(seller1);
-        Seller sellerFind = sellerRepository.findBySellerId(sellerId);
+        Seller newSeller = sellerRepository.saveNew(seller1);
 
-        assertThat(sellerFind.getSellerId()).isEqualTo(seller1.getSellerId());
-        assertThat(sellerFind.getPwd()).isEqualTo(seller1.getPwd());
-        assertThat(sellerFind.getEmail()).isEqualTo(seller1.getEmail());
-        assertThat(sellerFind.getName()).isEqualTo(seller1.getName());
+        assertThat(newSeller.getSellerId()).isEqualTo(seller1.getSellerId());
+        assertThat(newSeller.getPwd()).isEqualTo(seller1.getPwd());
+        assertThat(newSeller.getEmail()).isEqualTo(seller1.getEmail());
+        assertThat(newSeller.getName()).isEqualTo(seller1.getName());
     }
 
     @Test
     public void update(){
         Seller seller = Seller.builder().sellerId("seller2").pwd("1234").email("ddd@gmail.com").name("이판매자").build();
-        sellerRepository.saveNew(seller);
-        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+        String id = sellerRepository.saveNew(seller).getId();
 
         Seller editName = Seller.builder().sellerId("Seller2").email("ddd@gmail.com").name("이판매자").build();
         Seller updateSeller = sellerRepository.update(id, editName);
@@ -59,8 +57,7 @@ public class SellerRepositoryTest {
     @Test
     public void updatePwd(){
         Seller seller = Seller.builder().sellerId("seller3").pwd("1234").email("ddd@gmail.com").name("이판매자").build();
-        sellerRepository.saveNew(seller);
-        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+        String id = sellerRepository.saveNew(seller).getId();
 
         String editPwd = "5555";
         Seller updateSeller = sellerRepository.updatePwd(id, editPwd);
@@ -71,8 +68,7 @@ public class SellerRepositoryTest {
     @Test
     public void updateRefreshToken(){
         Seller seller = Seller.builder().sellerId("seller4").pwd("1234").email("ddd@gmail.com").name("이판매자").build();
-        sellerRepository.saveNew(seller);
-        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+        String id = sellerRepository.saveNew(seller).getId();
         System.out.println("seller = " + seller.getRefreshToken());
 
         String newRefreshToken = "refreshToken5555";
@@ -85,8 +81,7 @@ public class SellerRepositoryTest {
     @Test
     public void deleteRefreshToken(){
         Seller seller = Seller.builder().sellerId("seller5").refreshToken("refreshToken").build();
-        sellerRepository.saveNew(seller);
-        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+        String id = sellerRepository.saveNew(seller).getId();
 
         Seller updateSeller = sellerRepository.deleteRefreshToken(id);
 
@@ -96,8 +91,7 @@ public class SellerRepositoryTest {
     @Test
     public void deleteById(){
         Seller seller = Seller.builder().sellerId("seller6").pwd("55556666").email("ddd@gmail.com").name("판매자").build();
-        sellerRepository.saveNew(seller);
-        String id = sellerRepository.findBySellerId(seller.getSellerId()).getId();
+        String id = sellerRepository.saveNew(seller).getId();
 
         DeleteResult result = sellerRepository.deleteById(id);
 
