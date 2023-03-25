@@ -24,7 +24,7 @@ public class MailConfig {
         javaMailSender.setPassword(this.mailProperties.getPassword());
 
         pt.put("mail.smtp.auth", true);
-        pt.put("mail.smtp.ssl.enable", true);
+        pt.put("mail.smtp.starttls.enable", true);
 
         javaMailSender.setJavaMailProperties(pt);
         javaMailSender.setDefaultEncoding("UTF-8");
