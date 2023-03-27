@@ -54,30 +54,22 @@ public class JwtProvider {
     }
 
     public Map<String, Object> validateToken(String token){
-        try{
-            Date exp = parseClaims(token).getExpiration();
-            Date now = new Date();
-            long diffDays = ((exp.getTime() - now.getTime()) / 1000) / (24*60*60);
-            Map<String, Object> result = new HashMap<>();
-            result.put("diffDays", diffDays);
-            result.put("expBeforeNow", exp.before(now));
-            return result;
-        }catch (RuntimeException e){
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
-        }
+        Date exp = parseClaims(token).getExpiration();
+        Date now = new Date();
+        long diffDays = ((exp.getTime() - now.getTime()) / 1000) / (24*60*60);
+        Map<String, Object> result = new HashMap<>();
+        result.put("diffDays", diffDays);
+        result.put("expBeforeNow", exp.before(now));
+        return result;
     }
 
     public Claims parseClaims(String token){
-        try{
-            Claims claims = Jwts.parserBuilder()
-                                .setSigningKey(getSecretKey(salt))
-                                .build()
-                                .parseClaimsJws(token)
-                                .getBody();
-            return claims;
-        }catch (RuntimeException e){
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
-        }
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSecretKey(salt))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims;
     }
 
 }
