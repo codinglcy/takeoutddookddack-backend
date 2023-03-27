@@ -84,7 +84,7 @@ public class SellerService {
         Seller findSeller = sellerRepository.findBySellerId(sellerId);
 
         String tempPwd = tempPwd();
-        sellerRepository.updatePwd(findSeller.getId(), tempPwd);
+        sellerRepository.updatePwd(findSeller.getId(), passwordEncoder.encode(tempPwd));
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
