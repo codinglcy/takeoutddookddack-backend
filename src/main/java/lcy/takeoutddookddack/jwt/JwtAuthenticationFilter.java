@@ -24,8 +24,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = resolveToken((HttpServletRequest) request);
 
-        if (token != null && jwtProvider.validateToken(token)){
+        if (token != null){
+            boolean expBeforeNow = (boolean)jwtProvider.validateToken(token).get("expBeforeNow");
             Claims claims = jwtProvider.parseClaims(token);
+            claims.put("expBeforeNow", expBeforeNow);
+
             Authentication authentication = new UsernamePasswordAuthenticationToken(claims, "");
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

@@ -12,6 +12,7 @@ public enum ErrorCode {
 
 
     INVALID_TOKEN(BAD_REQUEST, "유효하지 않은 토큰입니다."),
+    INVALID_REFRESH_TOKEN(BAD_REQUEST, "리프레시토큰 만료. 재로그인 해주세요."),
 
     SELLERID_NOT_FOUND(NOT_FOUND,"존재하지 않는 아이디입니다."),
 

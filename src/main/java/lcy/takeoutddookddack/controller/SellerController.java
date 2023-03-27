@@ -2,9 +2,13 @@ package lcy.takeoutddookddack.controller;
 
 import com.mongodb.client.result.DeleteResult;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.Valid;
 import lcy.takeoutddookddack.domain.CheckResult;
+import lcy.takeoutddookddack.domain.LoginResult;
 import lcy.takeoutddookddack.domain.Seller;
+import lcy.takeoutddookddack.error.CustomException;
+import lcy.takeoutddookddack.error.ErrorCode;
 import lcy.takeoutddookddack.jwt.SecurityUtil;
 import lcy.takeoutddookddack.service.SellerService;
 import lombok.RequiredArgsConstructor;
@@ -119,11 +123,11 @@ public class SellerController {
     }
 
     @GetMapping("/login")
-    public String login(@RequestBody Map<String, String> loginInfo){
+    public LoginResult login(@RequestBody Map<String, String> loginInfo){
         String loginSellerId = loginInfo.get("sellerId");
         String loginPassword = loginInfo.get("pwd");
 
-        String loginResponse = sellerService.login(loginSellerId, loginPassword);
+        LoginResult loginResponse = sellerService.login(loginSellerId, loginPassword);
 
         return loginResponse;
     }
@@ -140,14 +144,23 @@ public class SellerController {
         return sellerService.removeById(currentSeller);
     }
 
-    @GetMapping("/checkToken")
+    @GetMapping("/checkAccessToken")
     public String checkToken(){
-        Claims currentSeller = securityUtil.getCurrentSeller();
-        if (currentSeller != null){
-            return "로그인 상태입니다.";
+        try{
+            if (!(boolean)securityUtil.getCurrentSeller().get("expBeforeNow")){
+                return "로그인 상태입니다.";
+            }
+            return null;
+        }catch (JwtException e){
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
-        String result = sellerService.checkRefreshToken(currentSeller.getId());
-        return result;
+
     }
+
+    @GetMapping("/checkRefreshToken")
+    public LoginResult checkRefreshToken(@RequestBody Map<String, String> body){
+        return sellerService.checkRefreshToken(body.get("refreshToken"));
+    }
+
 
 }

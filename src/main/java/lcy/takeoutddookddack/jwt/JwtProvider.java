@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
@@ -39,34 +41,41 @@ public class JwtProvider {
     }
 
     public String createRefreshToken(){
+        int randomNumber = (int)(Math.random() * 100000);
+        Claims claims = Jwts.claims();
+        claims.put("randomNumber", randomNumber);
         Date now = new Date();
         return Jwts.builder()
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + refreshExp))
                 .signWith(getSecretKey(salt), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public boolean validateToken(String token){
+    public Map<String, Object> validateToken(String token){
         try{
-            Jwts.parserBuilder()
-                    .setSigningKey(getSecretKey(salt))
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        }catch (JwtException e){
+            Date exp = parseClaims(token).getExpiration();
+            Date now = new Date();
+            long diffDays = ((exp.getTime() - now.getTime()) / 1000) / (24*60*60);
+            Map<String, Object> result = new HashMap<>();
+            result.put("diffDays", diffDays);
+            result.put("expBeforeNow", exp.before(now));
+            return result;
+        }catch (RuntimeException e){
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
 
     public Claims parseClaims(String token){
         try{
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSecretKey(salt))
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        }catch (JwtException e){
+            Claims claims = Jwts.parserBuilder()
+                                .setSigningKey(getSecretKey(salt))
+                                .build()
+                                .parseClaimsJws(token)
+                                .getBody();
+            return claims;
+        }catch (RuntimeException e){
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }

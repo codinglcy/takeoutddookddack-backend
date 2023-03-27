@@ -98,5 +98,15 @@ public class SellerRepositoryTest {
         assertThat(result.getDeletedCount()).isEqualTo(1);
     }
 
+    @Test
+    public void findByRefreshToken(){
+        String refreshToken = "11115555777744448888";
+        Seller seller = Seller.builder().sellerId("seller7").pwd("7777").email("ddd@gmail.com").name("판매").refreshToken(refreshToken).build();
+        String id = sellerRepository.saveNew(seller).getId();
+
+        Seller findSeller = sellerRepository.findByRefreshToken(refreshToken);
+
+        assertThat(findSeller.getId()).isEqualTo(id);
+    }
 
 }

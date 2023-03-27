@@ -29,6 +29,11 @@ public class SellerRepository extends AbstractRepository<Seller>{
         return findSeller;
     }
 
+    public Seller findByRefreshToken(String refreshToken){
+        Seller findSeller = template.findOne(new Query(Criteria.where("refreshToken").is(refreshToken)), Seller.class);
+        return findSeller;
+    }
+
     @Override
     public List<Seller> findAll() {
         List<Seller> sellerList = template.findAll(Seller.class);
