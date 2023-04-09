@@ -46,6 +46,14 @@ public class ShopRepository extends AbstractRepository<Shop> {
         return findShop;
     }
 
+    public List<Shop> findByLocation(String location){
+        Query query = new Query();
+        query.addCriteria(Criteria.where("location").regex(location));
+
+        List<Shop> shopList = template.find(query, Shop.class);
+        return shopList;
+    }
+
     @Override
     public Shop update(String id, Shop shop) {
         Query query = new Query();

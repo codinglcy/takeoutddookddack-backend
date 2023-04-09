@@ -25,9 +25,10 @@ public class ShopService {
         return allShop;
     }
 
-//    public List<Shop> findByLocation(){
-//
-//    }
+    public List<Shop> findByLocation(String location){
+        List<Shop> shopList = shopRepository.findByLocation(location);
+        return shopList;
+    }
 
     public Shop findByUrl(String shopUrl){
         Shop findShop = shopRepository.findByUrl(shopUrl);

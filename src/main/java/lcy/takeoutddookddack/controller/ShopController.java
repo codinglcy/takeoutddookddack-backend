@@ -21,8 +21,24 @@ public class ShopController {
     private final ShopService shopService;
     private final SecurityUtil securityUtil;
 
-    //주소별찾기
-//    @GetMapping("/location?city")
+    //주소별찾기(/api/shop/location?first=""&second=""&third="")
+    @GetMapping("/location")
+    public List<Shop> findByLocation(@RequestParam("first") String first, @RequestParam("second")String second, @RequestParam("third")String third){
+
+        String location = "";
+        if (!first.isBlank()){
+            location = location +first + ".*";
+        }
+        if (!second.isBlank()) {
+            location = location + second + ".*";
+        }
+        if (!third.isBlank()){
+            location = location + third;
+        }
+
+        return shopService.findByLocation(location);
+    }
+
 
     //모두찾기
     @GetMapping("/all")
