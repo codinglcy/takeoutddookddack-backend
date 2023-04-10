@@ -122,7 +122,7 @@ public class SellerController {
         return updateToken;
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public LoginResult login(@RequestBody Map<String, String> loginInfo){
         String loginSellerId = loginInfo.get("sellerId");
         String loginPassword = loginInfo.get("pwd");
@@ -158,8 +158,8 @@ public class SellerController {
     }
 
     @GetMapping("/checkRefreshToken")
-    public LoginResult checkRefreshToken(@RequestBody Map<String, String> body){
-        return sellerService.checkRefreshToken(body.get("refreshToken"));
+    public LoginResult checkRefreshToken(@RequestParam("refreshToken") String refreshToken){
+        return sellerService.checkRefreshToken(refreshToken);
     }
 
 
