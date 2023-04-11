@@ -48,8 +48,10 @@ public class ShopController {
 
     //url로 찾기
     @GetMapping("")
-    public Shop findShopByUrl(){
-        String sellerId = securityUtil.getCurrentSeller().get("sellerId", String.class);
+    public Shop findShopByUrl(@RequestParam("sellerId") String sellerId){
+        if (sellerId==null){
+            sellerId = securityUtil.getCurrentSeller().get("sellerId", String.class);
+        }
         return shopService.findByUrl(siteUrl+"buypage/"+sellerId);
     }
 
