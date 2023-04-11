@@ -158,7 +158,7 @@ public class SellerController {
     }
 
     @GetMapping("/checkRefreshToken")
-    public LoginResult checkRefreshToken(@RequestParam("refreshToken") String refreshToken){
+    public LoginResult checkRefreshToken(@RequestParam("token") String refreshToken){
         return sellerService.checkRefreshToken(refreshToken);
     }
 
