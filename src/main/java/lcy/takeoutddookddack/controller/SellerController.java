@@ -31,8 +31,8 @@ public class SellerController {
     private final SecurityUtil securityUtil;
 
     @GetMapping("/idCheck")
-    public CheckResult idCheck(@RequestBody Map<String,String> body){
-        CheckResult getResult = sellerService.idCheck(body.get("sellerId"));
+    public CheckResult idCheck(@RequestParam("sellerId") String sellerId){
+        CheckResult getResult = sellerService.idCheck(sellerId);
 
         return getResult;
     }
