@@ -5,13 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class LoginResult {
-    private String login;
     private String accessToken;
     private String refreshToken;
 
     @Builder
-    public LoginResult(String login, String accessToken, String refreshToken){
-        this.login = login;
+    public LoginResult(String accessToken, String refreshToken){
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
