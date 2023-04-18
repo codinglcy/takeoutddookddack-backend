@@ -24,6 +24,11 @@ public class OrderController {
         return orderService.findBySellerId(sellerId);
     }
 
+    @GetMapping("/shop")
+    public List<Orders> findBySellerIdNoLogin(@RequestParam("sellerId") String sellerId){
+        return orderService.findBySellerId(sellerId);
+    }
+
     //생성
     @PostMapping("")
     public void create(@RequestBody Orders order){
