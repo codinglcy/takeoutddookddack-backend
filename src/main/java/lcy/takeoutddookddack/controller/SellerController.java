@@ -135,7 +135,7 @@ public class SellerController {
     @DeleteMapping("/logout")
     public void logout(){
         Claims currentSeller = securityUtil.getCurrentSeller();
-        sellerService.logout(currentSeller.getId());
+        sellerService.logout(currentSeller.get("id", String.class));
     }
 
     @DeleteMapping("")
