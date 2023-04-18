@@ -102,20 +102,6 @@ public class ShopController {
         return shop;
     }
 
-    //페이지삭제
-    @DeleteMapping("")
-    public String deleteShop(){
-        Claims currentSeller = securityUtil.getCurrentSeller();
-        String sellerId = currentSeller.get("sellerId", String.class);
-        String shopUrl = siteUrl+"buypage/"+sellerId;
-
-        long result = shopService.deleteShop(shopUrl).getDeletedCount();
-        if (result == 1){
-            return "성공적으로 삭제했습니다.";
-        }
-        return "페이지가 없거나 정상적으로 삭제되지 않았습니다.";
-    }
-
     //open여부 update (/open?value=truefalse)
     @PatchMapping("/open")
     public void updateOpen(@RequestParam("value") boolean isOpen){
