@@ -99,7 +99,7 @@ public class SellerController {
     public String editSeller(@RequestBody @Valid Seller sellerInfo){
         Seller updateSeller;
 
-        if (sellerInfo.getPwd() == null){
+        if (sellerInfo.getPwd().isBlank()){
             updateSeller = Seller.builder()
                     .sellerId(sellerInfo.getSellerId())
                     .name(sellerInfo.getName())
