@@ -56,9 +56,10 @@ public class OrderController {
     }
 
     //sellerId별 삭제
-    @DeleteMapping("")
+    @DeleteMapping("/sellerId")
     public void deleteOrder(){
         String sellerId = securityUtil.getCurrentSeller().get("sellerId", String.class);
 
+        orderService.deleteOrderSellerId(sellerId);
     }
 }

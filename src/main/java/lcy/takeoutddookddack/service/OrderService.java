@@ -31,7 +31,6 @@ public class OrderService {
 
     public void deleteOrderSellerId(String sellerId){
         List<Orders> sellerIdOrders = ordersRepository.findBySeller(sellerId);
-
         for(Orders order:sellerIdOrders){
             ordersRepository.deleteById(order.getId());
         }
