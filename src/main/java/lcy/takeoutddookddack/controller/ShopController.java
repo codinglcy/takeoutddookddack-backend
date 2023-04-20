@@ -104,10 +104,12 @@ public class ShopController {
 
     //open여부 update (/open?value=truefalse)
     @PatchMapping("/open")
-    public void updateOpen(@RequestParam("value") boolean isOpen){
+    public void updateOpen(@RequestBody Map<String,String> body){
         Claims currentSeller = securityUtil.getCurrentSeller();
         String sellerId = currentSeller.get("sellerId", String.class);
         String shopUrl = siteUrl+"buypage/"+sellerId;
+
+        boolean isOpen = Boolean.parseBoolean(body.get("isOpen"));
 
         shopService.updateOpen(shopUrl, isOpen);
     }
