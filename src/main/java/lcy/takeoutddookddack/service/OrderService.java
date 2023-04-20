@@ -28,4 +28,12 @@ public class OrderService {
     public void deleteOrder(String id){
         ordersRepository.deleteById(id);
     }
+
+    public void deleteOrderSellerId(String sellerId){
+        List<Orders> sellerIdOrders = ordersRepository.findBySeller(sellerId);
+
+        for(Orders order:sellerIdOrders){
+            ordersRepository.deleteById(order.getId());
+        }
+    }
 }

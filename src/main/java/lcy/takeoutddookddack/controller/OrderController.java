@@ -54,4 +54,11 @@ public class OrderController {
     public void deleteOrder(@PathVariable String id){
         orderService.deleteOrder(id);
     }
+
+    //sellerId별 삭제
+    @DeleteMapping("")
+    public void deleteOrder(){
+        String sellerId = securityUtil.getCurrentSeller().get("sellerId", String.class);
+
+    }
 }
