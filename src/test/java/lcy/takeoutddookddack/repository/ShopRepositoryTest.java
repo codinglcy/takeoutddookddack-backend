@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -46,13 +48,24 @@ public class ShopRepositoryTest {
     }
 
     @Test
+    public void findAll(){
+        List<Shop> shopList = shopRepository.findAll();
+        for (Shop shop:shopList) {
+            System.out.println("shop = " + shop.getId()+shop.getShopUrl()+shop.getOpen()+"블라블라");
+        }
+    }
+
+    @Test
     public void update(){
         String id = shopRepository.saveNew(Shop.builder().bankAccount(new BankAccount("00은행","","")).location(new Location("dd회사","맞은편")).build()).getId();
         Shop shop1Edit = Shop.builder().bankAccount(new BankAccount("00은행","1111111111111","이판매자")).location(new Location("ㅇㅇ고등학교정문","맞은편")).build();
         Shop updateShop = shopRepository.update(id, shop1Edit);
 
-        assertThat(updateShop.getLocation()).isEqualTo(shop1Edit.getLocation());
-        assertThat(updateShop.getBankAccount()).isEqualTo(shop1Edit.getBankAccount());
+        assertThat(updateShop.getLocation().getAddress()).isEqualTo(shop1Edit.getLocation().getAddress());
+        assertThat(updateShop.getLocation().getMore()).isEqualTo(shop1Edit.getLocation().getMore());
+        assertThat(updateShop.getBankAccount().getBank()).isEqualTo(shop1Edit.getBankAccount().getBank());
+        assertThat(updateShop.getBankAccount().getAccountNum()).isEqualTo(shop1Edit.getBankAccount().getAccountNum());
+        assertThat(updateShop.getBankAccount().getName()).isEqualTo(shop1Edit.getBankAccount().getName());
     }
 
     @Test
