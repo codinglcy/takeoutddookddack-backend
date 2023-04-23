@@ -1,6 +1,8 @@
 package lcy.takeoutddookddack.controller;
 
 import io.jsonwebtoken.Claims;
+import lcy.takeoutddookddack.domain.BankAccount;
+import lcy.takeoutddookddack.domain.Location;
 import lcy.takeoutddookddack.domain.Menu;
 import lcy.takeoutddookddack.domain.Shop;
 import lcy.takeoutddookddack.jwt.SecurityUtil;
@@ -71,8 +73,8 @@ public class ShopController {
     @PatchMapping("")
     public Shop updateShop(@RequestBody Shop updateShopInfo){
         String id = updateShopInfo.getId();
-        String location = updateShopInfo.getLocation();
-        String bankAccount = updateShopInfo.getBankAccount();
+        Location location = new Location(updateShopInfo.getLocation().getAddress(),updateShopInfo.getLocation().getMore());
+        BankAccount bankAccount = new BankAccount(updateShopInfo.getBankAccount().getBank(),updateShopInfo.getBankAccount().getAccountNum(),updateShopInfo.getBankAccount().getName());
 
         Shop shop = Shop.builder().location(location).bankAccount(bankAccount).build();
         Shop updateShop = shopService.editShop(id, shop);

@@ -1,6 +1,8 @@
 package lcy.takeoutddookddack.repository;
 
 import com.mongodb.client.result.DeleteResult;
+import lcy.takeoutddookddack.domain.BankAccount;
+import lcy.takeoutddookddack.domain.Location;
 import lcy.takeoutddookddack.domain.Menu;
 import lcy.takeoutddookddack.domain.Shop;
 import org.junit.jupiter.api.BeforeAll;
@@ -45,8 +47,8 @@ public class ShopRepositoryTest {
 
     @Test
     public void update(){
-        String id = shopRepository.saveNew(Shop.builder().bankAccount("00은행").location("옆골목").build()).getId();
-        Shop shop1Edit = Shop.builder().bankAccount("00은행 1111111111111 이판매자").location("ㅇㅇ고등학교정문 맞은편").build();
+        String id = shopRepository.saveNew(Shop.builder().bankAccount(new BankAccount("00은행","","")).location(new Location("dd회사","맞은편")).build()).getId();
+        Shop shop1Edit = Shop.builder().bankAccount(new BankAccount("00은행","1111111111111","이판매자")).location(new Location("ㅇㅇ고등학교정문","맞은편")).build();
         Shop updateShop = shopRepository.update(id, shop1Edit);
 
         assertThat(updateShop.getLocation()).isEqualTo(shop1Edit.getLocation());
