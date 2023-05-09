@@ -115,13 +115,4 @@ public class ShopController {
 
         shopService.updateOpen(shopUrl, isOpen);
     }
-
-    @DeleteMapping("")
-    public void deleteShop(){
-        Claims currentSeller = securityUtil.getCurrentSeller();
-        String sellerId = currentSeller.get("sellerId", String.class);
-        String shopUrl = siteUrl+"buypage/"+sellerId;
-
-        shopService.deleteShop(shopUrl);
-    }
 }
