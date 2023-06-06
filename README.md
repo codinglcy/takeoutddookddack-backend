@@ -36,7 +36,7 @@
 <br>
 <br>
 
-## API 주소
+## API 문서
 [Order 관련 API](https://documenter.getpostman.com/view/20119504/2s93RNyFCp)&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;[Seller 관련 API](https://documenter.getpostman.com/view/20119504/2s93RNyFCr)&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;[Shop 관련 API](https://documenter.getpostman.com/view/20119504/2s93RNyFCs)
 
 <br>
